@@ -49,7 +49,6 @@ export default {
     BasicHeader
   },
   data() {
-    console.log(this.$route)
     return {
     };
   },
