@@ -73,7 +73,6 @@ const actions = {
             }else if(max_page>current_page){
                 res = classes.slice((current_page-1)*page_size,current_page*page_size) 
             }
-            console.log(res)
             commit('SAVE_CLASSES',{list:res,pagination:{page_size, current_page,total:classes.length}})
         })
     },
