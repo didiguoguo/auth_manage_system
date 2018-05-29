@@ -5,7 +5,9 @@ const CLASSES = new Array(60).fill({}).map((item, index) => ({
     end_time: '2018.06.25',
     begin_addr: '高德',
     course_plan: '查看详情',
-    create_time: '2018.05.25'
+    create_time: '2018.05.25',
+    id: index+1,
+    index: index+1,
   }))
   
   

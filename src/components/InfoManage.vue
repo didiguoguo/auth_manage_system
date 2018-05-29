@@ -2,7 +2,7 @@
   <div>
     <el-tabs v-model="activeKey" type="border-card" @tab-click="handleClick">
       <el-tab-pane label="考生列表" name="1">
-        <el-row class="stu-action">
+        <el-row class="action-wrapper">
           <el-col :md="{span:6}">
             <el-button size='small' type='success'>
               <i class='el-icon-plus'></i>添加学生</el-button>
@@ -15,25 +15,21 @@
             </el-input>
           </el-col>
         </el-row>
-        <el-table :data="stuData.list" border stripe style="width: 100%">
-          <el-table-column v-for="stu in stu_columns" :key="stu.id_card_num" :prop="stu.prop" :label="stu.label" :width="stu.width">
-            {{stu.prop==='action'?'123':'234'}}
-          </el-table-column>
-        </el-table>
-        <div class="pagination">
-          <el-pagination layout="total, -> , prev, pager, next, jumper" background :total="stuData.pagination.total" :page-size="stuData.pagination.page_size" :current-page="stuData.pagination.current_page" @current-change="handlePageChange">
-          </el-pagination>
-        </div>
+        <standard-table :data="stu_data.list" :columns="stu_columns" :pagination="stu_data.pagination" @handle-click="handleEdit" @handle-remove="handleRemove" @current-change="handlePageChange"></standard-table>
       </el-tab-pane>
       <el-tab-pane label="班级列表" name="2">
-        <el-table :data="classData.list" border stripe style="width: 100%">
-          <el-table-column v-for="cla in class_columns" :key="cla.id_card_num" :prop="cla.prop" :label="cla.label" :width="cla.width">
-            <div v-if="true">
-              <span>编辑</span>
-              <span>删除123</span>
-            </div>
-          </el-table-column>
-        </el-table>
+        <el-row class="action-wrapper">
+          <el-col :md="{span:6}">
+            <el-button size='small' type='success'>
+              <i class='el-icon-plus'></i>添加班级</el-button>
+          </el-col>
+          <el-col :md="{span:4,offset:14}">
+            <el-input size='small' placeholder="输入班级名称">
+              <el-button slot="append">搜索</el-button>
+            </el-input>
+          </el-col>
+        </el-row>
+        <standard-table :data="class_data.list" :columns="class_columns" :pagination="class_data.pagination" @handle-click="handleEdit" @handle-remove="handleRemove" @current-change="handlePageChange"></standard-table>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -44,17 +40,21 @@
     mapGetters,
     mapActions
   } from "vuex";
+  import StandardTable from './StandardTable.vue'
   const stu_columns = [{
       prop: "index",
-      label: "序号"
+      label: "序号",
+      width: 50,
     },
     {
       prop: "stu_name",
-      label: "考生姓名"
+      label: "考生姓名",
+      width: 150,
     },
     {
       prop: "gender",
-      label: "性别"
+      label: "性别",
+      width: 150,
     },
     {
       prop: "id_card_num",
@@ -72,26 +72,26 @@
       prop: "enter_time",
       label: "录入时间"
     },
-    {
-      prop: "action",
-      label: "操作"
-    }
   ];
   const class_columns = [{
       prop: "index",
-      label: "序号"
+      label: "序号",
+      width: 50,
     },
     {
       prop: "class_name",
-      label: "班级名称"
+      label: "班级名称",
+      width: 150,
     },
     {
       prop: "begin_time",
-      label: "开班时间"
+      label: "开班时间",
+      width: 200,
     },
     {
       prop: "end_time",
-      label: "结业时间"
+      label: "结业时间",
+      width: 200,
     },
     {
       prop: "begin_addr",
@@ -105,13 +105,10 @@
       prop: "create_time",
       label: "录入时间"
     },
-    {
-      prop: "action",
-      label: "操作"
-    }
   ];
   export default {
     name: "InfoManage",
+    components:{ StandardTable },
     data() {
       return {
         stu_columns,
@@ -120,8 +117,8 @@
       };
     },
     computed: mapGetters({
-      stuData: "students",
-      classData: "classes"
+      stu_data: "students",
+      class_data: "classes"
     }),
     methods: {
       handleClick(t, e) {
@@ -142,7 +139,6 @@
               page_size: 10
             }
           })
-  
         }
       },
       handlePageChange(current) {
@@ -183,9 +179,15 @@
       //     });
       //   }
       // },
+      handleEdit({row,column,index}) {
+        console.log('edit',row.id,index);
+      },
+      handleRemove({row,column,index}) {
+        console.log('remove',row.id,index);
+      },
       test() {
         console.log("test");
-      }
+      },
     },
     created() {
       if (this.activeKey === "1") {
@@ -234,7 +236,7 @@
     margin-top: 1em;
   }
   
-  .stu-action {
+  .action-wrapper {
     margin-bottom: 1em;
   }
 </style>
