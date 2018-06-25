@@ -1,10 +1,10 @@
 <template>
   <div>
-    <el-tabs v-model="activeKey" type="border-card" @tab-click="handleClick">
+    <el-tabs v-model="activeKey" type="border-card" @tab-click="handleToggleTab">
       <el-tab-pane label="考生列表" name="1">
         <el-row class="action-wrapper">
           <el-col :md="{span:6}">
-            <el-button size='small' type='success'>
+            <el-button size='small' type='success' @click="()=>handleShowModal('stu_modal_visible')">
               <i class='el-icon-plus'></i>添加学生</el-button>
             <el-button size='small' type='primary'>
               <i class='el-icon-download'></i>批量导入学生</el-button>
@@ -15,12 +15,12 @@
             </el-input>
           </el-col>
         </el-row>
-        <standard-table :data="stu_data.list" :columns="stu_columns" :pagination="stu_data.pagination" @handle-click="handleEdit" @handle-remove="handleRemove" @current-change="handlePageChange"></standard-table>
+        <standard-table :layout="'total, ->, prev, pager, next, jumper'" :data="stu_data.list" :columns="stu_columns" :pagination="stu_data.pagination" @handle-click="handleEdit" @handle-remove="handleRemove" @current-change="handlePageChange"></standard-table>
       </el-tab-pane>
       <el-tab-pane label="班级列表" name="2">
         <el-row class="action-wrapper">
           <el-col :md="{span:6}">
-            <el-button size='small' type='success'>
+            <el-button size='small' type='success' @click="()=>handleShowModal('cla_modal_visible')">
               <i class='el-icon-plus'></i>添加班级</el-button>
           </el-col>
           <el-col :md="{span:4,offset:14}">
@@ -29,9 +29,52 @@
             </el-input>
           </el-col>
         </el-row>
-        <standard-table :data="class_data.list" :columns="class_columns" :pagination="class_data.pagination" @handle-click="handleEdit" @handle-remove="handleRemove" @current-change="handlePageChange"></standard-table>
+        <standard-table :layout="'total, ->, prev, pager, next, jumper'" :data="class_data.list" :columns="class_columns" :pagination="class_data.pagination" @handle-click="handleEdit" @handle-remove="handleRemove" @current-change="handlePageChange"></standard-table>
       </el-tab-pane>
     </el-tabs>
+    <el-dialog
+      title="添加考生"
+      :visible.sync="stu_modal_visible"
+      width="30%"
+    >
+      <el-form :model="stu_form" :rules="stu_rules" ref="stu_form">
+        <el-form-item label="考生姓名" prop="stu_name" :label-width="'120px'">
+          <el-input v-model="stu_form.stu_name" auto-complete="off" size='small'></el-input>
+        </el-form-item>
+        <el-form-item label="性别" :label-width="'120px'">
+          <el-radio-group v-model="stu_form.gender">
+            <el-radio :label="1">男</el-radio>
+            <el-radio :label="2">女</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="身份证号" :label-width="'120px'">
+          <el-input v-model="stu_form.id_card_num" auto-complete="off" size='small'></el-input>
+        </el-form-item>
+        <el-form-item :label-width="'120px'">
+          <el-button size='small' @click="stu_modal_visible = false">取 消</el-button>
+          <el-button size='small' type="primary" @click="()=>submitForm('stu_form')">确 定</el-button>
+        </el-form-item>
+      </el-form>
+      <!-- <div slot="footer" class="dialog-footer">
+        <el-button @click="stu_modal_visible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('stu_form')">确 定</el-button>
+      </div> -->
+    </el-dialog>
+    <el-dialog
+      title="添加班级"
+      :visible.sync="cla_modal_visible"
+      width="30%"
+    >
+      <el-form :model="cla_form">
+        <el-form-item label="班级名称" :label-width="'120px'">
+          <el-input v-model="cla_form.class_name" auto-complete="off" size='small'></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cla_modal_visible = false">取 消</el-button>
+        <el-button type="primary" @click="cla_modal_visible = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -113,7 +156,37 @@
       return {
         stu_columns,
         class_columns,
-        activeKey: "1"
+        activeKey: "1",
+        stu_modal_visible: false,
+        cla_modal_visible: false,
+        stu_form: {
+          stu_name: '',
+          gender: 1,
+          id_card_num: '',
+          phone: '',
+          unit: '',
+          job_title: ''
+        },
+        cla_form: {
+          class_name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        stu_rules:{
+          stu_name: [
+            { required: true, message: '请输入考生姓名', trigger: 'blur' },
+          ],
+        },
+        cla_rules:{
+          name: [
+            { required: true, message: '请输入考生姓名', trigger: 'blur' },
+          ],
+        },
       };
     },
     computed: mapGetters({
@@ -121,7 +194,7 @@
       class_data: "classes"
     }),
     methods: {
-      handleClick(t, e) {
+      handleToggleTab(t, e) {
         this.activeKey = t.name;
         if (t.name === '1') {
           this.$store.dispatch({
@@ -180,10 +253,28 @@
       //   }
       // },
       handleEdit({row,column,index}) {
-        console.log('edit',row.id,index);
+        console.log('edit',row,index);
       },
       handleRemove({row,column,index}) {
-        console.log('remove',row.id,index);
+        console.log('remove',row,index);
+      },
+      handleShowModal(key){
+        this[key] = true
+      },
+      handleCloseModal(key){
+        this[key] = false
+      },
+      submitForm(formName) {
+        console.log(this.$refs)
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log(valid)
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
       test() {
         console.log("test");

@@ -10,7 +10,7 @@
       </el-table-column>
     </el-table>
     <div class="pagination">
-      <el-pagination  background :total="pagination.total" :page-size="pagination.page_size" :current-page="pagination.current_page" @current-change="(current)=>$emit('current-change',current)" >
+      <el-pagination :layout="layout" background :total="pagination.total" :page-size="pagination.page_size" :current-page="pagination.current_page" @current-change="(current)=>$emit('current-change',current)" >
       </el-pagination>
     </div>
   </div>
