@@ -1,14 +1,12 @@
 <template>
   <el-card>
+    <div slot="header" class="clearfix">
+      <span>《{{class_data.class_name}}》学生成绩表</span>
+    </div>
     <el-row class="action-wrapper">
       <el-col :md="{span:6}">
-        <el-button size='small' type='success' @click="()=>handleShowModal('stu_modal_visible')">
-          <i class='el-icon-plus'></i>录入考生</el-button>
-      </el-col>
-      <el-col :md="{span:5,offset:13}">
-        <el-input size='small' placeholder="输入姓名或证件号">
-          <el-button slot="append">搜索</el-button>
-        </el-input>
+        <el-button size='small' type='primary' @click="()=>handleShowModal('stu_modal_visible')">
+          <i class='el-icon-download'></i>成绩批量导出</el-button>
       </el-col>
     </el-row>
     <standard-table 
@@ -17,6 +15,7 @@
       :columns="stu_columns" 
       :actions="actions"
       :pagination="stu_data.pagination" 
+      @handle-edit="handleEdit" 
       @handle-remove="handleRemove" 
       @current-change="handlePageChange" 
       @handle-show-more="handleShowDetail"
@@ -55,39 +54,25 @@ const stu_columns = [
   {
     prop: "index",
     label: "序号",
-    width: 50
+    width: 75
   },
   {
     prop: "stu_name",
     label: "考生姓名",
-    width: 150
-  },
-  {
-    prop: "gender",
-    label: "性别",
-    width: 150
   },
   {
     prop: "id_card_num",
     label: "身份证号"
   },
   {
-    prop: "phone_num",
-    label: "联系电话"
-  },
-  {
-    prop: "job_title",
-    label: "职称"
-  },
-  {
-    prop: "enter_time",
-    label: "录入时间"
+    prop: "result",
+    label: "理论成绩"
   }
 ];
 const actions = [
   {
-    text: "删除",
-    method: "handle-remove"
+    text: "双击此处录入成绩",
+    method: "handle-edit"
   }
 ];
 export default {
@@ -105,6 +90,9 @@ export default {
         phone: "",
         unit: "",
         job_title: ""
+      },
+      class_data: {
+        class_name: "机械一班"
       },
       stu_rules: {
         stu_name: [
@@ -135,6 +123,9 @@ export default {
           page_size: 10
         }
       });
+    },
+    handleEdit({ row, column, index }) {
+      console.log("edit", row, index);
     },
     handleRemove({ row, column, index }) {
       console.log("remove", row, index);
@@ -193,9 +184,6 @@ a {
 
 .action-wrapper {
   margin-bottom: 1em;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
 }
 .search {
   width: 240px;

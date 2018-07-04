@@ -8,7 +8,7 @@
     <standard-table 
       :layout="'total, ->, prev, pager, next, jumper'" 
       :data="class_data.list" 
-      :columns="class_columns" 
+      :columns="result_columns" 
       :actions="actions"
       :pagination="class_data.pagination" 
       @handle-remove="handleRemove" 
@@ -21,7 +21,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import StandardTable from "./StandardTable.vue";
-const class_columns = [
+const result_columns = [
   {
     prop: "index",
     label: "序号",
@@ -38,6 +38,10 @@ const class_columns = [
   {
     prop: "end_time",
     label: "结业时间"
+  },
+  {
+    prop: "class_number",
+    label: "班级人数"
   }
 ];
 const actions = [
@@ -51,7 +55,7 @@ export default {
   components: { StandardTable },
   data() {
     return {
-      class_columns,
+      result_columns,
       actions,
       class_modal_visible: false,
       class_form: {
@@ -96,6 +100,9 @@ export default {
     },
     handleShowDetail({ row, column, index }) {
       console.log("showdetail", row, index);
+       this.$router.push({
+        path:`results_manage/result_detail/${row.id}`,
+      })
     },
     handleShowModal(key) {
       this[key] = true;

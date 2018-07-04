@@ -45,6 +45,7 @@
       BasicHeader
     },
     data() {
+      console.log(this.$route)
       return {};
     },
     methods: {
@@ -59,7 +60,7 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
   .el-menu-item.is-active a {
     color: #409EFF;
   }

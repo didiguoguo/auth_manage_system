@@ -28,11 +28,13 @@ export default new Router({
           path: 'results_manage',
           name: '考生成绩管理',
           component: ResultManage,
-        },
-        {
-          path: 'result_detail/:id',
-          name: '成绩详情',
-          component: ResultDetail,
+          children:[
+            {
+              path: 'result_detail/:id',
+              name: '成绩详情',
+              component: ResultDetail,
+            },
+          ]
         },
         {
           path: 'class_detail/:id',
