@@ -1,12 +1,17 @@
 <template>
-  <el-card>
+  <el-card >
     <div slot="header" class="clearfix">
-      <span>《{{class_data.class_name}}》学生成绩表</span>
+      <span>《{{class_data.class_name}}》班级成员</span>
     </div>
     <el-row class="action-wrapper">
       <el-col :md="{span:6}">
-        <el-button size='small' type='primary' @click="()=>handleShowModal('stu_modal_visible')">
-          <i class='el-icon-download'></i>成绩批量导出</el-button>
+        <el-button size='small' type='success' @click="()=>handleShowModal('stu_modal_visible')">
+          <i class='el-icon-plus'></i>录入考生</el-button>
+      </el-col>
+      <el-col :md="{span:5,offset:13}">
+        <el-input size='small' placeholder="输入姓名或联系电话">
+          <el-button slot="append">搜索</el-button>
+        </el-input>
       </el-col>
     </el-row>
     <standard-table 
@@ -15,7 +20,6 @@
       :columns="stu_columns" 
       :actions="actions"
       :pagination="stu_data.pagination" 
-      @handle-edit="handleEdit" 
       @handle-remove="handleRemove" 
       @current-change="handlePageChange" 
       @handle-show-more="handleShowDetail"
@@ -49,34 +53,44 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import StandardTable from "./StandardTable.vue";
+import StandardTable from "../components/StandardTable.vue";
 const stu_columns = [
   {
     prop: "index",
     label: "序号",
-    width: 75
+    width: 50
   },
   {
     prop: "stu_name",
     label: "考生姓名",
+    width: 150
+  },
+  {
+    prop: "gender",
+    label: "性别",
+    width: 150
   },
   {
     prop: "id_card_num",
     label: "身份证号"
   },
   {
-    prop: "result",
-    label: "理论成绩"
+    prop: "phone_num",
+    label: "联系电话"
+  },
+  {
+    prop: "enter_time",
+    label: "录入时间"
   }
 ];
 const actions = [
   {
-    text: "双击此处录入成绩",
-    method: "handle-edit"
+    text: "删除",
+    method: "handle-remove"
   }
 ];
 export default {
-  name: "ResultDetail",
+  name: "ClassDetail",
   components: { StandardTable },
   data() {
     return {
@@ -105,7 +119,8 @@ export default {
     stu_data: "students"
   }),
   created() {
-    console.log(this.$route)
+    console.log(this.$route);
+    /* 此处缺少一个请求当前班级信息的请求，请求后将班级详情信息保存至class_data */
     this.$store.dispatch({
       type: "get_students",
       payload: {
@@ -123,9 +138,6 @@ export default {
           page_size: 10
         }
       });
-    },
-    handleEdit({ row, column, index }) {
-      console.log("edit", row, index);
     },
     handleRemove({ row, column, index }) {
       console.log("remove", row, index);
@@ -184,6 +196,9 @@ a {
 
 .action-wrapper {
   margin-bottom: 1em;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 .search {
   width: 240px;

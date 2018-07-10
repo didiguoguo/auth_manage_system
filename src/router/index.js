@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import BasicLayout from '@/Layout/BasicLayout'
-import Login from '@/components/Login'
-import InfoManage from '@/components/InfoManage'
-import ClassDetail from '@/components/ClassDetail'
-import ResultManage from '@/components/ResultManage'
-import ResultDetail from '@/components/ResultDetail'
-import ManagerInfo from '@/components/ManagerInfo'
-import TestManage from '@/components/TestManage'
-import Notfound from '@/components/Notfound'
+import Login from '@/pages/Login'
+import InfoManage from '@/pages/InfoManage'
+import ClassDetail from '@/pages/ClassDetail'
+import ResultManage from '@/pages/ResultManage'
+import ResultDetail from '@/pages/ResultDetail'
+import ManagerInfo from '@/pages/ManagerInfo'
+import TestManage from '@/pages/TestManage'
+import Notfound from '@/pages/Notfound'
 
 Vue.use(Router)
 
@@ -28,13 +28,11 @@ export default new Router({
           path: 'results_manage',
           name: '考生成绩管理',
           component: ResultManage,
-          children:[
-            {
-              path: 'result_detail/:id',
-              name: '成绩详情',
-              component: ResultDetail,
-            },
-          ]
+        },
+        {
+          path: 'result_detail/:id',
+          name: '成绩详情',
+          component: ResultDetail,
         },
         {
           path: 'class_detail/:id',

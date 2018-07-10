@@ -103,7 +103,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import StandardTable from "./StandardTable.vue";
+import StandardTable from "../components/StandardTable.vue";
 const stu_columns = [
   {
     prop: "index",
@@ -131,6 +131,10 @@ const stu_columns = [
   {
     prop: "job_title",
     label: "职称"
+  },
+  {
+    prop: "class",
+    label: "班级"
   },
   {
     prop: "enter_time",

@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+   <el-card>
     <div class="action-wrapper">
       <el-input class="search" size='small' placeholder="输入姓名或证件号">
         <el-button slot="append">搜索</el-button>
@@ -20,7 +20,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import StandardTable from "./StandardTable.vue";
+import StandardTable from "../components/StandardTable.vue";
 const result_columns = [
   {
     prop: "index",
@@ -51,8 +51,20 @@ const actions = [
   }
 ];
 export default {
-  name: "ResultManage",
+  name: "TestManage",
   components: { StandardTable },
+  computed: mapGetters({
+    class_data: "classes"
+  }),
+  created() {
+    this.$store.dispatch({
+      type: "get_classes",
+      payload: {
+        current_page: 1,
+        page_size: 10
+      }
+    });
+  },
   data() {
     return {
       result_columns,
@@ -73,18 +85,6 @@ export default {
       }
     };
   },
-  computed: mapGetters({
-    class_data: "classes"
-  }),
-  created() {
-    this.$store.dispatch({
-      type: "get_classes",
-      payload: {
-        current_page: 1,
-        page_size: 10
-      }
-    });
-  },
   methods: {
     handlePageChange(current) {
       this.$store.dispatch({
@@ -100,9 +100,9 @@ export default {
     },
     handleShowDetail({ row, column, index }) {
       console.log("showdetail", row, index);
-       this.$router.push({
-        path:`results_manage/result_detail/${row.id}`,
-      })
+      this.$router.push({
+        path: `result_detail/${row.id}`
+      });
     },
     handleShowModal(key) {
       this[key] = true;
@@ -151,15 +151,5 @@ li {
 
 a {
   color: #42b983;
-}
-
-.action-wrapper {
-  margin-bottom: 1em;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-}
-.search{
-  max-width:240px;
 }
 </style>
