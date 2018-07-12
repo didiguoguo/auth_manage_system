@@ -7,10 +7,10 @@
     </div>
     <standard-table 
       :layout="'total, ->, prev, pager, next, jumper'" 
-      :data="class_data.list" 
-      :columns="result_columns" 
+      :data="tests_data.list" 
+      :columns="test_columns" 
       :actions="actions"
-      :pagination="class_data.pagination" 
+      :pagination="tests_data.pagination" 
       @handle-remove="handleRemove" 
       @current-change="handlePageChange" 
       @handle-show-more="handleShowDetail"
@@ -21,44 +21,72 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import StandardTable from "../components/StandardTable.vue";
-const result_columns = [
+const test_columns = [
   {
     prop: "index",
     label: "序号",
     width: 100
   },
   {
-    prop: "class_name",
-    label: "班级名称"
+    prop: "test_name",
+    label: "考试名称"
   },
   {
-    prop: "begin_time",
-    label: "开班时间"
+    prop: "type",
+    label: "考试类型"
   },
   {
-    prop: "end_time",
-    label: "结业时间"
+    prop: "test_work_type",
+    label: "考试工种"
   },
   {
-    prop: "class_number",
-    label: "班级人数"
-  }
+    prop: "test_target",
+    label: "考试人员"
+  },
+  {
+    prop: "test_duration",
+    label: "考试时长"
+  },
+  {
+    prop: "test_cycle",
+    label: "考试时间"
+  },
+  {
+    prop: "test_times",
+    label: "考试次数"
+  },
+  {
+    prop: "status",
+    label: "考试状态"
+  },
 ];
 const actions = [
   {
-    text: "查看成绩详情",
-    method: "handle-show-more"
-  }
+    text: "编辑",
+    method: "handle-edit"
+  },
+  {
+    text: "删除",
+    method: "handle-delete"
+  },
+  {
+    text: "查看考试结果",
+    method: "handle-show-detail"
+  },
+  {
+    text: "查看审批结果",
+    method: "handle-show-check"
+  },
 ];
 export default {
   name: "TestManage",
   components: { StandardTable },
   computed: mapGetters({
-    class_data: "classes"
+    tests_data: "tests"
   }),
   created() {
     this.$store.dispatch({
-      type: "get_classes",
+      type: "get_tests",
       payload: {
         current_page: 1,
         page_size: 10
@@ -67,19 +95,19 @@ export default {
   },
   data() {
     return {
-      result_columns,
+      test_columns,
       actions,
-      class_modal_visible: false,
-      class_form: {
-        class_name: "",
+      test_modal_visible: false,
+      test_form: {
+        test_name: "",
         gender: 1,
         id_card_num: "",
         phone: "",
         unit: "",
         job_title: ""
       },
-      class_rules: {
-        class_name: [
+      test_rules: {
+        test_name: [
           { required: true, message: "请输入考生姓名", trigger: "blur" }
         ]
       }
@@ -88,7 +116,7 @@ export default {
   methods: {
     handlePageChange(current) {
       this.$store.dispatch({
-        type: "get_classes",
+        type: "get_tests",
         payload: {
           current_page: current,
           page_size: 10
@@ -101,7 +129,7 @@ export default {
     handleShowDetail({ row, column, index }) {
       console.log("showdetail", row, index);
       this.$router.push({
-        path: `result_detail/${row.id}`
+        path: `test_detail/${row.id}`
       });
     },
     handleShowModal(key) {
@@ -114,7 +142,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           console.log(valid, formName);
-          this.handleCloseModal("cla_modal_visible");
+          this.handleCloseModal("test_modal_visible");
           this.$message({
             message: "添加成功!",
             type: "success"

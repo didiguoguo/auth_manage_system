@@ -8,6 +8,7 @@ const CLASSES = new Array(60).fill({}).map((item, index) => ({
     create_time: '2018.05.25',
     id: index+1,
     index: index+1,
+    class_number: 50,
   }))
   
   
