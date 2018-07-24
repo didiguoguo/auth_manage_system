@@ -52,32 +52,34 @@
       </el-tab-pane>
     </el-tabs>
     <el-dialog
-      title="添加考生"
+      :title="!stu_form.id?'添加考生':'编辑考生'"
       :visible.sync="stu_modal_visible"
       width="30%"
     >
       <el-form :model="stu_form" :rules="stu_rules" ref="stu_form">
-        <el-form-item label="考生姓名" prop="stu_name" :label-width="'120px'">
-          <el-input v-model="stu_form.stu_name" auto-complete="off" size='small'></el-input>
+        <el-form-item label="考生姓名" prop="student_name" :label-width="'120px'">
+          <el-input v-model="stu_form.student_name" auto-complete="off" size='small'></el-input>
         </el-form-item>
-        <el-form-item label="性别" :label-width="'120px'">
+        <el-form-item label="性别" :label-width="'120px'" prop="gender">
           <el-radio-group v-model="stu_form.gender">
-            <el-radio :label="1">男</el-radio>
-            <el-radio :label="2">女</el-radio>
+            <el-radio :label="'男'">男</el-radio>
+            <el-radio :label="'女'">女</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="身份证号" :label-width="'120px'">
+        <el-form-item label="身份证号" :label-width="'120px'" prop="id_card_num">
           <el-input v-model="stu_form.id_card_num" auto-complete="off" size='small'></el-input>
+        </el-form-item>
+        <el-form-item label="联系电话" :label-width="'120px'" prop="phone_num">
+          <el-input v-model="stu_form.phone_num" auto-complete="off" size='small'></el-input>
+        </el-form-item>
+        <el-form-item label="职称" :label-width="'120px'" prop="job_title">
+          <el-input v-model="stu_form.job_title" auto-complete="off" size='small'></el-input>
         </el-form-item>
         <el-form-item :label-width="'120px'">
           <el-button size='small' @click="stu_modal_visible = false">取 消</el-button>
-          <el-button size='small' type="primary" @click="()=>submitForm('stu_form')">确 定</el-button>
+          <el-button size='small' type="primary" @click="()=>submitForm('stu_form',!stu_form.id? 'add':'modify')">确 定</el-button>
         </el-form-item>
       </el-form>
-      <!-- <div slot="footer" class="dialog-footer">
-        <el-button @click="stu_modal_visible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('stu_form')">确 定</el-button>
-      </div> -->
     </el-dialog>
     <el-dialog
       title="添加班级"
@@ -93,10 +95,6 @@
           <el-button size='small' type="primary" @click="()=>submitForm('cla_form')">确 定</el-button>
         </el-form-item>
       </el-form>
-      <!-- <div slot="footer" class="dialog-footer">
-        <el-button @click="cla_modal_visible = false">取 消</el-button>
-        <el-button type="primary" @click="()=>submitForm('cla_form')">确 定</el-button>
-      </div> -->
     </el-dialog>
   </div>
 </template>
@@ -106,12 +104,12 @@ import { mapGetters, mapActions } from "vuex";
 import StandardTable from "../components/StandardTable.vue";
 const stu_columns = [
   {
-    prop: "index",
-    label: "序号",
+    prop: "id",
+    label: "id",
     width: 50
   },
   {
-    prop: "stu_name",
+    prop: "student_name",
     label: "考生姓名",
     width: 150
   },
@@ -133,7 +131,7 @@ const stu_columns = [
     label: "职称"
   },
   {
-    prop: "class",
+    prop: "class_name",
     label: "班级"
   },
   {
@@ -212,11 +210,10 @@ export default {
       stu_modal_visible: false,
       cla_modal_visible: false,
       stu_form: {
-        stu_name: "",
-        gender: 1,
+        student_name: "",
+        gender: '男',
         id_card_num: "",
-        phone: "",
-        unit: "",
+        phone_num: "",
         job_title: ""
       },
       cla_form: {
@@ -230,7 +227,7 @@ export default {
         desc: ""
       },
       stu_rules: {
-        stu_name: [
+        student_name: [
           { required: true, message: "请输入考生姓名", trigger: "blur" }
         ]
       },
@@ -283,33 +280,39 @@ export default {
         });
       }
     },
-    // handleSizeChange(size){
-    //   if (this.activeKey === "1") {
-    //     this.$store.dispatch({
-    //       type: "get_students",
-    //       payload: {
-    //         current_page: 1,
-    //         page_size: 10
-    //       }
-    //     });
-    //   } else if (this.activeKey === "2") {
-    //     this.$store.dispatch({
-    //       type: "get_classes",
-    //       payload: {
-    //         current_page: 1,
-    //         page_size: 10
-    //       }
-    //     });
-    //   }
-    // },
     handleEdit({ row, column, index }) {
-      console.log("edit", row, index);
+      this.stu_form = { ...row }
+      this.handleShowModal("stu_modal_visible");
     },
     handleRemove({ row, column, index }) {
-      console.log("remove", row, index);
+      this.$store.dispatch({
+        type:'delete_students',
+        payload: {
+          data: { ids: [row.id] },
+          cb:(res)=>{
+            if(res.data && res.data.code === 200){
+              this.$message({
+                message: "删除成功!",
+                type: "success"
+              });
+              this.$store.dispatch({
+                type:'get_students',
+                payload: {
+                  current_page: 1,
+                  page_size: 10
+                }
+              })
+            }else{
+              this.$message({
+                message: "删除失败!",
+                type: "warn"
+              });
+            }
+          }
+        },
+      })
     },
     handleShowMembers({ row, column, index }) {
-      console.log("showmembers", row, index);
       this.$router.push({
         path:`class_detail/${row.id}`,
       })
@@ -320,21 +323,52 @@ export default {
     handleCloseModal(key) {
       this[key] = false;
     },
-    submitForm(formName) {
+    submitForm(formName,method) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(valid, formName);
+          let type = ''
+          let succ_message = ''
+          let error_message = ''
           if (formName === "stu_form") {
-            this.handleCloseModal("stu_modal_visible");
+            if(method==='add'){
+              succ_message = '添加成功！'
+              type = 'add_student'
+            }else if(method==='modify'){
+              succ_message = '修改成功！'
+              type = 'modify_student'
+            }
+            this.$store.dispatch({
+              type,
+              payload: {
+                data: this.$refs[formName].model,
+                cb:(res)=>{
+                  if(res.data && res.data.code === 200){
+                    this.$refs[formName].resetFields()
+                    this.$message({
+                      message: succ_message,
+                      type: "success"
+                    });
+                    this.$store.dispatch({
+                      type:'get_students',
+                      payload: {
+                        current_page: 1,
+                        page_size: 10
+                      }
+                    })
+                  }else{
+                    this.$message({
+                      message: error_message,
+                      type: "warn"
+                    });
+                  }
+                  this.handleCloseModal("stu_modal_visible");
+                }
+              },
+            })
           } else if (formName === "cla_form") {
             this.handleCloseModal("cla_modal_visible");
           }
-          this.$message({
-            message: "添加成功!",
-            type: "success"
-          });
         } else {
-          console.log("error submit!!");
           return false;
         }
       });

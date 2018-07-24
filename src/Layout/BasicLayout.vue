@@ -45,7 +45,6 @@
       BasicHeader
     },
     data() {
-      console.log(this.$route)
       return {};
     },
     methods: {
