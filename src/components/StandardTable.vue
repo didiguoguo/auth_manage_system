@@ -5,22 +5,20 @@
         align="center" 
         v-for="value in columns" 
         :key="value.id_card_num" 
-        :prop="value.prop" 
         :label="value.label" 
         :width="value.width"
       >
-      </el-table-column>
-      <el-table-column align="center"  prop="action" label="操作">
         <template slot-scope="scope">
-          <el-button  
-            v-for="(value,index) in actions" 
+          <span
+            v-if="value.actions"
+            v-for="(v,index) in value.actions" 
+            class="actions"
             :key="index" 
-            @click="$emit(value.method,{row:scope.row,column:scope.column,index:scope.$index})" 
-            type="text" 
-            size="small"
+            @click="$emit(v.method,{row:scope.row,column:scope.column,index:scope.$index})" 
           >
-            {{value.text}}
-          </el-button>
+            <el-button type="text"  size="small"> {{v.text}} </el-button>
+          </span>
+          <span v-if="!value.actions">{{scope.row[value.prop]}}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -85,6 +83,10 @@ ul {
 li {
   display: inline-block;
   margin: 0 10px;
+}
+
+.actions{
+  margin-right: .5em;
 }
 
 a {

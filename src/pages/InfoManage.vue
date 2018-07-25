@@ -4,7 +4,7 @@
       <el-tab-pane label="考生列表" name="1">
         <el-row class="action-wrapper">
           <el-col :md="{span:6}">
-            <el-button size='small' type='success' @click="()=>handleShowModal('stu_modal_visible')">
+            <el-button size='small' type='success' @click="handleAddStudent">
               <i class='el-icon-plus'></i>添加学生</el-button>
             <el-button size='small' type='primary'>
               <i class='el-icon-download'></i>批量导入学生</el-button>
@@ -18,7 +18,6 @@
         <standard-table 
           :layout="'total, ->, prev, pager, next, jumper'" 
           :data="stu_data.list" :columns="stu_columns" 
-          :actions="stu_actions"
           :pagination="stu_data.pagination" 
           @handle-click="handleEdit" 
           @handle-remove="handleRemove" 
@@ -41,7 +40,6 @@
         <standard-table 
           :layout="'total, ->, prev, pager, next, jumper'" 
           :data="class_data.list" 
-          :actions="class_actions"
           :columns="class_columns" 
           :pagination="class_data.pagination" 
           @handle-show-member="handleShowMembers"
@@ -76,7 +74,7 @@
           <el-input v-model="stu_form.job_title" auto-complete="off" size='small'></el-input>
         </el-form-item>
         <el-form-item :label-width="'120px'">
-          <el-button size='small' @click="stu_modal_visible = false">取 消</el-button>
+          <el-button size='small' @click="()=>handleCloseModal('stu_modal_visible')">取 消</el-button>
           <el-button size='small' type="primary" @click="()=>submitForm('stu_form',!stu_form.id? 'add':'modify')">确 定</el-button>
         </el-form-item>
       </el-form>
@@ -137,6 +135,20 @@ const stu_columns = [
   {
     prop: "enter_time",
     label: "录入时间"
+  },
+  {
+    prop: "action",
+    label: "操作",
+    actions: [
+      {
+        text: "编辑",
+        method: "handle-click"
+      },
+      {
+        text: "删除",
+        method: "handle-remove"
+      }
+    ]
   }
 ];
 const class_columns = [
@@ -171,6 +183,24 @@ const class_columns = [
   {
     prop: "create_time",
     label: "录入时间"
+  },
+  {
+    prop: "action",
+    label: "操作",
+    actions: [
+      {
+        text: "班级成员",
+        method: "handle-show-member"
+      },
+      {
+        text: "编辑",
+        method: "handle-click"
+      },
+      {
+        text: "删除",
+        method: "handle-remove"
+      }
+    ]
   }
 ];
 const stu_actions = [
@@ -183,20 +213,23 @@ const stu_actions = [
     method: "handle-remove"
   }
 ];
-const class_actions = [
-  {
-    text: "班级成员",
-    method: "handle-show-member"
-  },
-  {
-    text: "编辑",
-    method: "handle-click"
-  },
-  {
-    text: "删除",
-    method: "handle-remove"
-  }
-];
+const stu_form_values = {
+  student_name: "",
+  gender: "男",
+  id_card_num: "",
+  phone_num: "",
+  job_title: ""
+};
+const cla_form_values = {
+  class_name: "",
+  region: "",
+  date1: "",
+  date2: "",
+  delivery: false,
+  type: [],
+  resource: "",
+  desc: ""
+};
 export default {
   name: "InfoManage",
   components: { StandardTable },
@@ -204,28 +237,11 @@ export default {
     return {
       stu_columns,
       class_columns,
-      stu_actions,
-      class_actions,
       activeKey: "1",
       stu_modal_visible: false,
       cla_modal_visible: false,
-      stu_form: {
-        student_name: "",
-        gender: '男',
-        id_card_num: "",
-        phone_num: "",
-        job_title: ""
-      },
-      cla_form: {
-        class_name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: ""
-      },
+      stu_form: stu_form_values,
+      cla_form: cla_form_values,
       stu_rules: {
         student_name: [
           { required: true, message: "请输入考生姓名", trigger: "blur" }
@@ -281,41 +297,45 @@ export default {
       }
     },
     handleEdit({ row, column, index }) {
-      this.stu_form = { ...row }
+      this.stu_form = { ...row };
       this.handleShowModal("stu_modal_visible");
     },
     handleRemove({ row, column, index }) {
       this.$store.dispatch({
-        type:'delete_students',
+        type: "delete_students",
         payload: {
           data: { ids: [row.id] },
-          cb:(res)=>{
-            if(res.data && res.data.code === 200){
+          cb: res => {
+            if (res.data && res.data.code === 200) {
               this.$message({
                 message: "删除成功!",
                 type: "success"
               });
               this.$store.dispatch({
-                type:'get_students',
+                type: "get_students",
                 payload: {
                   current_page: 1,
                   page_size: 10
                 }
-              })
-            }else{
+              });
+            } else {
               this.$message({
                 message: "删除失败!",
                 type: "warn"
               });
             }
           }
-        },
-      })
+        }
+      });
     },
     handleShowMembers({ row, column, index }) {
       this.$router.push({
-        path:`class_detail/${row.id}`,
-      })
+        path: `class_detail/${row.id}`
+      });
+    },
+    handleAddStudent() {
+      this.stu_form = stu_form_values;
+      this.handleShowModal("stu_modal_visible");
     },
     handleShowModal(key) {
       this[key] = true;
@@ -323,39 +343,39 @@ export default {
     handleCloseModal(key) {
       this[key] = false;
     },
-    submitForm(formName,method) {
+    submitForm(formName, method) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let type = ''
-          let succ_message = ''
-          let error_message = ''
+          let type = "";
+          let succ_message = "";
+          let error_message = "";
           if (formName === "stu_form") {
-            if(method==='add'){
-              succ_message = '添加成功！'
-              type = 'add_student'
-            }else if(method==='modify'){
-              succ_message = '修改成功！'
-              type = 'modify_student'
+            if (method === "add") {
+              succ_message = "添加成功！";
+              type = "add_student";
+            } else if (method === "modify") {
+              succ_message = "修改成功！";
+              type = "modify_student";
             }
             this.$store.dispatch({
               type,
               payload: {
                 data: this.$refs[formName].model,
-                cb:(res)=>{
-                  if(res.data && res.data.code === 200){
-                    this.$refs[formName].resetFields()
+                cb: res => {
+                  if (res.data && res.data.code === 200) {
+                    this.$refs[formName].resetFields();
                     this.$message({
                       message: succ_message,
                       type: "success"
                     });
                     this.$store.dispatch({
-                      type:'get_students',
+                      type: "get_students",
                       payload: {
                         current_page: 1,
                         page_size: 10
                       }
-                    })
-                  }else{
+                    });
+                  } else {
                     this.$message({
                       message: error_message,
                       type: "warn"
@@ -363,8 +383,8 @@ export default {
                   }
                   this.handleCloseModal("stu_modal_visible");
                 }
-              },
-            })
+              }
+            });
           } else if (formName === "cla_form") {
             this.handleCloseModal("cla_modal_visible");
           }
