@@ -80,26 +80,47 @@ const actions = {
         })
     },
     get_classes({ commit, state },{payload}){
-        _classes.getClasses(classes=>{
-            const { page_size, current_page } = payload
-            let total = classes.length
-            let res = []
-            let max_page = parseInt(total/page_size)
-            if(max_page<current_page){
-                res = classes.slice((max_page-1)*page_size)
-            }else if(max_page===current_page){
-                if(total/page_size<page_size){
-                    res = classes.slice((current_page-1)*page_size)
-                }else{
-                    res = classes.slice((current_page-1)*page_size,current_page*page_size) 
-                }
-            }else if(max_page>current_page){
-                res = classes.slice((current_page-1)*page_size,current_page*page_size) 
-            }
-            commit('SAVE_CLASSES',{list:res,pagination:{page_size, current_page,total:classes.length}})
+        axios.request({
+            url:'http://192.168.1.58:5000/classes/',
+            method:'GET',
+            params: payload
+        }).then((res)=>{
+            commit('SAVE_CLASSES',res.data)
         })
     },
-    delete_classes(){},
+    add_class({ commit, state },{payload:{data,cb}}){
+        axios.request({
+            url: 'http://192.168.1.58:5000/add/class/',
+            method: 'POST',
+            data: data
+        }).then((res)=>{
+            if(cb){
+                cb(res)
+            }
+        })
+    },
+    modify_class({ commit, state },{payload:{data:{id,...rest},cb}}){
+        axios.request({
+            url: `http://192.168.1.58:5000/modify/class/${id}`,
+            method: 'PATCH',
+            data: rest
+        }).then((res)=>{
+            if(cb){
+                cb(res)
+            }
+        })
+    },
+    delete_classes({ commit, state },{payload:{data,cb}}){
+        axios.request({
+            url: 'http://192.168.1.58:5000/delete/classes/',
+            method: 'DELETE',
+            data: data
+        }).then((res)=>{
+            if(cb){
+                cb(res)
+            }
+        })
+    },
 }
 
 // mutations

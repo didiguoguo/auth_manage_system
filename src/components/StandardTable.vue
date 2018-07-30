@@ -52,10 +52,6 @@ export default {
       type: Array,
       default: () => []
     },
-    actions: {
-      type: Array,
-      default: () => []
-    },
     layout: {
       type: String,
       default: () => ""

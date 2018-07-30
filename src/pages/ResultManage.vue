@@ -9,7 +9,6 @@
       :layout="'total, ->, prev, pager, next, jumper'" 
       :data="class_data.list" 
       :columns="result_columns" 
-      :actions="actions"
       :pagination="class_data.pagination" 
       @handle-remove="handleRemove" 
       @current-change="handlePageChange" 
@@ -23,8 +22,8 @@ import { mapGetters, mapActions } from "vuex";
 import StandardTable from "../components/StandardTable.vue";
 const result_columns = [
   {
-    prop: "index",
-    label: "序号",
+    prop: "id",
+    label: "id",
     width: 100
   },
   {
@@ -42,13 +41,15 @@ const result_columns = [
   {
     prop: "class_number",
     label: "班级人数"
-  }
-];
-const actions = [
+  },
   {
-    text: "查看成绩详情",
-    method: "handle-show-more"
-  }
+    prop: "action",
+    label: "操作",
+    actions:[{
+      text: "查看成绩详情",
+      method: "handle-show-more"
+    }]
+  },
 ];
 export default {
   name: "ResultManage",
@@ -56,7 +57,6 @@ export default {
   data() {
     return {
       result_columns,
-      actions,
       class_modal_visible: false,
       class_form: {
         class_name: "",
@@ -100,7 +100,7 @@ export default {
     },
     handleShowDetail({ row, column, index }) {
       console.log("showdetail", row, index);
-       this.$router.push({
+      this.$router.push({
         path:`result_detail/${row.id}`,
       })
     },

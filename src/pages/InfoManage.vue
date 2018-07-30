@@ -10,16 +10,16 @@
               <i class='el-icon-download'></i>批量导入学生</el-button>
           </el-col>
           <el-col :md="{span:4,offset:14}">
-            <el-input size='small' placeholder="输入姓名或证件号">
-              <el-button slot="append">搜索</el-button>
+            <el-input size='small' v-model="student_condition" placeholder="输入学生姓名进行搜索">
+              <el-button slot="append" @click="()=>handleSearch('student')">搜索</el-button>
             </el-input>
           </el-col>
         </el-row>
         <standard-table 
           :layout="'total, ->, prev, pager, next, jumper'" 
-          :data="stu_data.list" :columns="stu_columns" 
+          :data="stu_data.list" :columns="student_columns" 
           :pagination="stu_data.pagination" 
-          @handle-click="handleEdit" 
+          @handle-click="(d)=>handleEdit(d,'student')" 
           @handle-remove="handleRemove" 
           @current-change="handlePageChange"
         >
@@ -28,12 +28,12 @@
       <el-tab-pane label="班级列表" name="2">
         <el-row class="action-wrapper">
           <el-col :md="{span:6}">
-            <el-button size='small' type='success' @click="()=>handleShowModal('cla_modal_visible')">
+            <el-button size='small' type='success' @click="handleAddClass">
               <i class='el-icon-plus'></i>添加班级</el-button>
           </el-col>
           <el-col :md="{span:4,offset:14}">
-            <el-input size='small' placeholder="输入班级名称">
-              <el-button slot="append">搜索</el-button>
+            <el-input size='small' placeholder="输入班级名称进行搜索" v-model="class_condition">
+              <el-button slot="append" @click="()=>handleSearch('class')">搜索</el-button>
             </el-input>
           </el-col>
         </el-row>
@@ -43,54 +43,66 @@
           :columns="class_columns" 
           :pagination="class_data.pagination" 
           @handle-show-member="handleShowMembers"
-          @handle-click="handleEdit" 
+          @handle-click="(d)=>handleEdit(d,'class')" 
           @handle-remove="handleRemove" 
           @current-change="handlePageChange" 
         />
       </el-tab-pane>
     </el-tabs>
     <el-dialog
-      :title="!stu_form.id?'添加考生':'编辑考生'"
-      :visible.sync="stu_modal_visible"
+      :title="!student_form.id?'添加考生':'编辑考生'"
+      :visible.sync="student_modal_visible"
       width="30%"
     >
-      <el-form :model="stu_form" :rules="stu_rules" ref="stu_form">
+      <el-form :model="student_form" :rules="student_rules" ref="student_form">
         <el-form-item label="考生姓名" prop="student_name" :label-width="'120px'">
-          <el-input v-model="stu_form.student_name" auto-complete="off" size='small'></el-input>
+          <el-input v-model="student_form.student_name" auto-complete="off" size='small'></el-input>
         </el-form-item>
         <el-form-item label="性别" :label-width="'120px'" prop="gender">
-          <el-radio-group v-model="stu_form.gender">
+          <el-radio-group v-model="student_form.gender">
             <el-radio :label="'男'">男</el-radio>
             <el-radio :label="'女'">女</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="身份证号" :label-width="'120px'" prop="id_card_num">
-          <el-input v-model="stu_form.id_card_num" auto-complete="off" size='small'></el-input>
+          <el-input v-model="student_form.id_card_num" auto-complete="off" size='small'></el-input>
         </el-form-item>
         <el-form-item label="联系电话" :label-width="'120px'" prop="phone_num">
-          <el-input v-model="stu_form.phone_num" auto-complete="off" size='small'></el-input>
+          <el-input v-model="student_form.phone_num" auto-complete="off" size='small'></el-input>
         </el-form-item>
         <el-form-item label="职称" :label-width="'120px'" prop="job_title">
-          <el-input v-model="stu_form.job_title" auto-complete="off" size='small'></el-input>
+          <el-input v-model="student_form.job_title" auto-complete="off" size='small'></el-input>
         </el-form-item>
         <el-form-item :label-width="'120px'">
-          <el-button size='small' @click="()=>handleCloseModal('stu_modal_visible')">取 消</el-button>
-          <el-button size='small' type="primary" @click="()=>submitForm('stu_form',!stu_form.id? 'add':'modify')">确 定</el-button>
+          <el-button size='small' @click="()=>handleCloseModal('student_modal_visible')">取 消</el-button>
+          <el-button size='small' type="primary" @click="()=>submitForm('student_form',!student_form.id? 'add':'modify')">确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
     <el-dialog
-      title="添加班级"
-      :visible.sync="cla_modal_visible"
+      :title="!class_form.id?'添加班级':'编辑班级'"
+      :visible.sync="class_modal_visible"
       width="30%"
     >
-      <el-form :model="cla_form" :rules="cla_rules" ref="cla_form">
-        <el-form-item label="班级名称" :label-width="'120px'">
-          <el-input v-model="cla_form.class_name" auto-complete="off" size='small'></el-input>
+      <el-form :model="class_form" :rules="class_rules" ref="class_form">
+        <el-form-item label="班级名称" :label-width="'120px'" placeholder="输入班级名称">
+          <el-input v-model="class_form.class_name" auto-complete="off" size='small'></el-input>
+        </el-form-item>
+        <el-form-item label="开班时间" :label-width="'120px'">
+          <el-date-picker v-model="class_form.begin_time" type="date" placeholder="选择开班时间" value-format="yyyyMMdd" format="yyyy-MM-dd"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="结业时间" :label-width="'120px'">
+          <el-date-picker v-model="class_form.end_time" type="date" placeholder="选择结业时间" value-format="yyyyMMdd" format="yyyy-MM-dd"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="开班地点" :label-width="'120px'">
+          <el-input v-model="class_form.begin_address" auto-complete="off" size='small' placeholder="输入开班地点"></el-input>
+        </el-form-item>
+        <el-form-item label="授课安排" :label-width="'120px'">
+          <el-input v-model="class_form.course_plan" auto-complete="off" size='small' placeholder="输入授课安排"></el-input>
         </el-form-item>
         <el-form-item :label-width="'120px'">
-          <el-button size='small' @click="cla_modal_visible = false">取 消</el-button>
-          <el-button size='small' type="primary" @click="()=>submitForm('cla_form')">确 定</el-button>
+          <el-button size='small' @click="class_modal_visible = false">取 消</el-button>
+          <el-button size='small' type="primary" @click="()=>submitForm('class_form',!class_form.id? 'add':'modify')">确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -100,7 +112,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import StandardTable from "../components/StandardTable.vue";
-const stu_columns = [
+const student_columns = [
   {
     prop: "id",
     label: "id",
@@ -153,8 +165,8 @@ const stu_columns = [
 ];
 const class_columns = [
   {
-    prop: "index",
-    label: "序号",
+    prop: "id",
+    label: "id",
     width: 50
   },
   {
@@ -173,7 +185,7 @@ const class_columns = [
     width: 200
   },
   {
-    prop: "begin_addr",
+    prop: "begin_address",
     label: "开班地点"
   },
   {
@@ -203,51 +215,40 @@ const class_columns = [
     ]
   }
 ];
-const stu_actions = [
-  {
-    text: "编辑",
-    method: "handle-click"
-  },
-  {
-    text: "删除",
-    method: "handle-remove"
-  }
-];
-const stu_form_values = {
+const student_form_values = {
   student_name: "",
   gender: "男",
   id_card_num: "",
   phone_num: "",
   job_title: ""
 };
-const cla_form_values = {
+const class_form_values = {
   class_name: "",
-  region: "",
-  date1: "",
-  date2: "",
-  delivery: false,
-  type: [],
-  resource: "",
-  desc: ""
+  begin_time: "",
+  end_time: "",
+  begin_address: "",
+  course_plan: ""
 };
 export default {
   name: "InfoManage",
   components: { StandardTable },
   data() {
     return {
-      stu_columns,
+      student_columns,
       class_columns,
       activeKey: "1",
-      stu_modal_visible: false,
-      cla_modal_visible: false,
-      stu_form: stu_form_values,
-      cla_form: cla_form_values,
-      stu_rules: {
+      student_modal_visible: false,
+      class_modal_visible: false,
+      student_form: student_form_values,
+      class_form: class_form_values,
+      student_condition:'',
+      class_condition:'',
+      student_rules: {
         student_name: [
           { required: true, message: "请输入考生姓名", trigger: "blur" }
         ]
       },
-      cla_rules: {
+      class_rules: {
         name: [{ required: true, message: "请输入考生姓名", trigger: "blur" }]
       }
     };
@@ -296,13 +297,35 @@ export default {
         });
       }
     },
-    handleEdit({ row, column, index }) {
-      this.stu_form = { ...row };
-      this.handleShowModal("stu_modal_visible");
+    handleEdit({ row, column, index },type) {
+      if(type==='student'){
+        this.student_form = { ...row };
+        this.handleShowModal("student_modal_visible");
+      }else if(type==='class'){
+        this.class_form = { ...row, begin_time:`${row.begin_time}`,  end_time:`${row.end_time}` };
+        this.handleShowModal("class_modal_visible");
+      }
+    },
+    handleSearch(type){
+      if(type='student'){
+        this.$store.dispatch({
+          type:'get_students',
+          payload:{
+            student_name: this.student_condition
+          }
+        })
+      }else if(type='class'){
+        this.$store.dispatch({
+          type:'get_classes',
+          payload:{
+            class_name: this.class_condition
+          }
+        })
+      }
     },
     handleRemove({ row, column, index }) {
       this.$store.dispatch({
-        type: "delete_students",
+        type: this.activeKey==='1'? "delete_students": "delete_classes",
         payload: {
           data: { ids: [row.id] },
           cb: res => {
@@ -312,7 +335,7 @@ export default {
                 type: "success"
               });
               this.$store.dispatch({
-                type: "get_students",
+                type: this.activeKey==='1'? "get_students": "get_classes",
                 payload: {
                   current_page: 1,
                   page_size: 10
@@ -334,8 +357,12 @@ export default {
       });
     },
     handleAddStudent() {
-      this.stu_form = stu_form_values;
-      this.handleShowModal("stu_modal_visible");
+      this.student_form = student_form_values;
+      this.handleShowModal("student_modal_visible");
+    },
+    handleAddClass() {
+      this.class_form = class_form_values;
+      this.handleShowModal("class_modal_visible");
     },
     handleShowModal(key) {
       this[key] = true;
@@ -347,47 +374,67 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           let type = "";
+          let cb_type = "";
           let succ_message = "";
           let error_message = "";
-          if (formName === "stu_form") {
+          let visible = ""
+          let data =  this.$refs[formName].model
+          let initData = {}
+          if (method === "add") {
+            succ_message = "添加成功！";
+            error_message = "添加失败！";
+          } else if (method === "modify") {
+            succ_message = "修改成功！";
+            error_message = "修改失败！";
+          }
+          if (formName === "student_form") {
+            visible = "student_modal_visible"
+            initData = student_form_values
+            cb_type = "get_students"
             if (method === "add") {
-              succ_message = "添加成功！";
               type = "add_student";
             } else if (method === "modify") {
-              succ_message = "修改成功！";
               type = "modify_student";
             }
-            this.$store.dispatch({
-              type,
-              payload: {
-                data: this.$refs[formName].model,
-                cb: res => {
-                  if (res.data && res.data.code === 200) {
-                    this.$refs[formName].resetFields();
-                    this.$message({
-                      message: succ_message,
-                      type: "success"
-                    });
-                    this.$store.dispatch({
-                      type: "get_students",
-                      payload: {
-                        current_page: 1,
-                        page_size: 10
-                      }
-                    });
-                  } else {
-                    this.$message({
-                      message: error_message,
-                      type: "warn"
-                    });
-                  }
-                  this.handleCloseModal("stu_modal_visible");
-                }
-              }
-            });
-          } else if (formName === "cla_form") {
-            this.handleCloseModal("cla_modal_visible");
+          } else if (formName === "class_form") {
+            initData = class_form_values
+            visible = "class_modal_visible"
+            cb_type = "get_classes"
+            if (method === "add") {
+              type = "add_class";
+            } else if (method === "modify") {
+              type = "modify_class";
+            }
           }
+          this.$store.dispatch({
+            type,
+            payload: {
+              data,
+              cb: res => {
+                if (res.data && res.data.code === 200) {
+                  this.$refs[formName].resetFields();
+                  this[formName] = initData
+                  this.$message({
+                    message: succ_message,
+                    type: "success"
+                  });
+                  this.$store.dispatch({
+                    type: cb_type,
+                    payload: {
+                      current_page: 1,
+                      page_size: 10
+                    }
+                  });
+                } else {
+                  this.$message({
+                    message: error_message,
+                    type: "warn"
+                  });
+                }
+                this.handleCloseModal(visible);
+              }
+            }
+          });
         } else {
           return false;
         }
