@@ -1,4 +1,4 @@
-import _test from '../../api/test'
+import axios from 'axios'
 
 const state = {
     tests_data: {
@@ -21,26 +21,47 @@ const getters = {
 // actions
 const actions = {
     get_tests({ commit, state },{payload}){
-        _test.getTests(tests=>{
-            const { page_size, current_page } = payload
-            let total = tests.length
-            let res = []
-            let max_page = parseInt(total/page_size)
-            if(max_page<current_page){
-                res = tests.slice((max_page-1)*page_size)
-            }else if(max_page===current_page){
-                if(total/page_size<page_size){
-                    res = tests.slice((current_page-1)*page_size)
-                }else{
-                    res = tests.slice((current_page-1)*page_size,current_page*page_size) 
-                }
-            }else if(max_page>current_page){
-                res = tests.slice((current_page-1)*page_size,current_page*page_size) 
-            }
-            commit('SAVE_TESTS',{list:res,pagination:{page_size, current_page,total:tests.length}})
+        axios.request({
+            url:'http://192.168.1.58:5000/tests/',
+            method:'GET',
+            params: payload
+        }).then((res)=>{
+            commit('SAVE_TESTS',res.data)
         })
     },
-    delete_tests(){},
+    add_test({ commit, state },{payload:{data,cb}}){
+        axios.request({
+            url: 'http://192.168.1.58:5000/add/test/',
+            method: 'POST',
+            data: data
+        }).then((res)=>{
+            if(cb){
+                cb(res)
+            }
+        })
+    },
+    modify_test({ commit, state },{payload:{data:{id,...rest},cb}}){
+        axios.request({
+            url: `http://192.168.1.58:5000/modify/test/${id}`,
+            method: 'PATCH',
+            data: rest
+        }).then((res)=>{
+            if(cb){
+                cb(res)
+            }
+        })
+    },
+    delete_tests({ commit, state },{payload:{data,cb}}){
+        axios.request({
+            url: 'http://192.168.1.58:5000/delete/tests/',
+            method: 'DELETE',
+            data: data
+        }).then((res)=>{
+            if(cb){
+                cb(res)
+            }
+        })
+    },
 }
 
 // mutations

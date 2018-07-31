@@ -1,15 +1,17 @@
 <template>
   <el-card>
-    <div class="action-wrapper">
-      <el-input class="search" size='small' placeholder="输入姓名或证件号">
-        <el-button slot="append">搜索</el-button>
-      </el-input>
+    <div class="actions">
+      <div class="action-wrapper">
+        <el-input class="search" size='small' v-model="condition" placeholder="输入姓名或证件号">
+          <el-button slot="append" @click="handleSearch">搜索</el-button>
+        </el-input>
+      </div>
     </div>
     <standard-table 
       :layout="'total, ->, prev, pager, next, jumper'" 
-      :data="class_data.list" 
+      :data="classes_data.list" 
       :columns="result_columns" 
-      :pagination="class_data.pagination" 
+      :pagination="classes_data.pagination" 
       @handle-remove="handleRemove" 
       @current-change="handlePageChange" 
       @handle-show-more="handleShowDetail"
@@ -66,6 +68,7 @@ export default {
         unit: "",
         job_title: ""
       },
+      condition:'',
       class_rules: {
         class_name: [
           { required: true, message: "请输入考生姓名", trigger: "blur" }
@@ -74,7 +77,7 @@ export default {
     };
   },
   computed: mapGetters({
-    class_data: "classes"
+    classes_data: "classes"
   }),
   created() {
     this.$store.dispatch({
@@ -95,11 +98,20 @@ export default {
         }
       });
     },
+    handleSearch(){
+      this.$store.dispatch({
+        type:'get_classes',
+        payload:{
+          class_name: this.condition,
+          current_page: 1,
+          page_size: 10
+        }
+      })
+    },
     handleRemove({ row, column, index }) {
       console.log("remove", row, index);
     },
     handleShowDetail({ row, column, index }) {
-      console.log("showdetail", row, index);
       this.$router.push({
         path:`result_detail/${row.id}`,
       })
@@ -155,10 +167,20 @@ a {
 
 .action-wrapper {
   margin-bottom: 1em;
+  flex: 9;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
 }
+
+.actions{
+  display: flex;
+}
+
+.back{
+  flex: 1;
+}
+
 .search{
   max-width:240px;
 }

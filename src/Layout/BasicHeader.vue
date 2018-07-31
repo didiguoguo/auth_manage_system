@@ -17,8 +17,8 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .header-container {
-    height: 60px;
-    line-height: 60px;
+    height: 40px;
+    line-height: 40px;
     background: rgb(119, 119, 240);
   }
   

@@ -17,8 +17,8 @@
         </el-row>
         <standard-table 
           :layout="'total, ->, prev, pager, next, jumper'" 
-          :data="stu_data.list" :columns="student_columns" 
-          :pagination="stu_data.pagination" 
+          :data="students_data.list" :columns="student_columns" 
+          :pagination="students_data.pagination" 
           @handle-click="(d)=>handleEdit(d,'student')" 
           @handle-remove="handleRemove" 
           @current-change="handlePageChange"
@@ -39,9 +39,9 @@
         </el-row>
         <standard-table 
           :layout="'total, ->, prev, pager, next, jumper'" 
-          :data="class_data.list" 
+          :data="classes_data.list" 
           :columns="class_columns" 
-          :pagination="class_data.pagination" 
+          :pagination="classes_data.pagination" 
           @handle-show-member="handleShowMembers"
           @handle-click="(d)=>handleEdit(d,'class')" 
           @handle-remove="handleRemove" 
@@ -254,8 +254,8 @@ export default {
     };
   },
   computed: mapGetters({
-    stu_data: "students",
-    class_data: "classes"
+    students_data: "students",
+    classes_data: "classes"
   }),
   methods: {
     handleToggleTab(t, e) {
@@ -353,7 +353,11 @@ export default {
     },
     handleShowMembers({ row, column, index }) {
       this.$router.push({
-        path: `class_detail/${row.id}`
+        name: `班级详情`,
+        params:{
+          id: row.id,
+          activeKey: this.activeKey
+        }
       });
     },
     handleAddStudent() {
@@ -445,6 +449,7 @@ export default {
     }
   },
   created() {
+    this.activeKey = this.$route.params.activeKey || '1'
     if (this.activeKey === "1") {
       this.$store.dispatch({
         type: "get_students",

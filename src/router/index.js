@@ -35,7 +35,7 @@ export default new Router({
           component: ResultDetail,
         },
         {
-          path: 'class_detail/:id',
+          path: 'class_detail',
           name: '班级详情',
           component: ClassDetail,
         },

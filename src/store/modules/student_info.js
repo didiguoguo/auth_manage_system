@@ -1,7 +1,6 @@
-import _students from '../../api/student'
-import _classes from '../../api/class'
 import { WSAEDESTADDRREQ } from 'constants';
 import axios from 'axios'
+import { Notification } from 'element-ui';
 
 const state = {
     students_data: {
@@ -33,6 +32,9 @@ const getters = {
     classes: (state,payload)=>{
         return state.classes_data
     },
+    class: (state,payload)=>{
+        return state.class_data.data
+    },
 }
 
 // actions
@@ -44,6 +46,11 @@ const actions = {
             params: payload
         }).then((res)=>{
             commit('SAVE_STUDENTS',res.data)
+        }).catch((err)=>{
+            Notification({
+                type:'error',
+                message: err
+            })
         })
     },
     add_student({ commit, state },{payload:{data,cb}}){
@@ -88,6 +95,15 @@ const actions = {
             commit('SAVE_CLASSES',res.data)
         })
     },
+    get_class_by_id({ commit, state },{payload:{ id, ...rest }}){
+        axios.request({
+            url:`http://192.168.1.58:5000/class/${id}`,
+            method:'GET',
+            params: rest
+        }).then((res)=>{
+            commit('SAVE_CLASS',res.data)
+        })
+    },
     add_class({ commit, state },{payload:{data,cb}}){
         axios.request({
             url: 'http://192.168.1.58:5000/add/class/',
@@ -130,6 +146,9 @@ const mutations = {
     },
     SAVE_CLASSES(state, payload){
         state.classes_data = payload
+    },
+    SAVE_CLASS(state, payload){
+        state.class_data = payload
     },
     ADD_STUDENTS(){},
     DELETE_STUDENTS(){},

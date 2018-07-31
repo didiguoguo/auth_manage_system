@@ -76,7 +76,6 @@
   }
   
   .header {
-    height: 60px;
     flex: 0;
   }
   

@@ -3,22 +3,22 @@
     <el-table :data="data" border stripe style="width: 100%">
       <el-table-column 
         align="center" 
-        v-for="value in columns" 
-        :key="value.id_card_num" 
-        :label="value.label" 
-        :width="value.width"
+        v-for="column in columns" 
+        :key="column.id_card_num" 
+        :label="column.label" 
+        :width="column.width"
       >
         <template slot-scope="scope">
           <span
-            v-if="value.actions"
-            v-for="(v,index) in value.actions" 
+            v-for="(v,index) in column.actions" 
+            v-if="column.actions && (!column.renderable || (column.renderable && column.renderable(scope.row,v)))"
             class="actions"
             :key="index" 
             @click="$emit(v.method,{row:scope.row,column:scope.column,index:scope.$index})" 
           >
             <el-button type="text"  size="small"> {{v.text}} </el-button>
           </span>
-          <span v-if="!value.actions">{{scope.row[value.prop]}}</span>
+          <span v-if="scope.row[column.prop]">{{scope.row[column.prop]}}</span>
         </template>
       </el-table-column>
     </el-table>
