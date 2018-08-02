@@ -325,32 +325,38 @@ export default {
       }
     },
     handleRemove({ row, column, index }) {
-      this.$store.dispatch({
-        type: this.activeKey==='1'? "delete_students": "delete_classes",
-        payload: {
-          data: { ids: [row.id] },
-          cb: res => {
-            if (res.data && res.data.code === 200) {
-              this.$message({
-                message: "删除成功!",
-                type: "success"
-              });
-              this.$store.dispatch({
-                type: this.activeKey==='1'? "get_students": "get_classes",
-                payload: {
-                  current_page: 1,
-                  page_size: 10
+      this.$confirm('确定删除吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$store.dispatch({
+            type: this.activeKey==='1'? "delete_students": "delete_classes",
+            payload: {
+              data: { ids: [row.id] },
+              cb: res => {
+                if (res.data && res.data.code === 200) {
+                  this.$message({
+                    message: "删除成功!",
+                    type: "success"
+                  });
+                  this.$store.dispatch({
+                    type: this.activeKey==='1'? "get_students": "get_classes",
+                    payload: {
+                      current_page: 1,
+                      page_size: 10
+                    }
+                  });
+                } else {
+                  this.$message({
+                    message: "删除失败!",
+                    type: "warn"
+                  });
                 }
-              });
-            } else {
-              this.$message({
-                message: "删除失败!",
-                type: "warn"
-              });
+              }
             }
-          }
-        }
-      });
+          })
+        }).catch(() => {});
     },
     handleShowMembers({ row, column, index }) {
       this.$router.push({
