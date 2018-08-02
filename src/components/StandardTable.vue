@@ -4,7 +4,7 @@
       <el-table-column 
         align="center" 
         v-for="column in columns" 
-        :key="column.id_card_num" 
+        :key="column.id" 
         :label="column.label" 
         :width="column.width"
       >

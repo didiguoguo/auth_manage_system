@@ -22,18 +22,24 @@ const getters = {
 const actions = {
     get_tests({ commit, state },{payload}){
         axios.request({
-            url:'http://192.168.1.58:5000/tests/',
+            url:'http://192.168.1.14:5000/tests/',
             method:'GET',
-            params: payload
+            params: payload,
+            headers:{
+                token: localStorage.getItem('token')
+            }
         }).then((res)=>{
             commit('SAVE_TESTS',res.data)
         })
     },
     add_test({ commit, state },{payload:{data,cb}}){
         axios.request({
-            url: 'http://192.168.1.58:5000/add/test/',
+            url: 'http://192.168.1.14:5000/add/test/',
             method: 'POST',
-            data: data
+            data: data,
+            headers:{
+                token: localStorage.getItem('token')
+            }
         }).then((res)=>{
             if(cb){
                 cb(res)
@@ -42,9 +48,12 @@ const actions = {
     },
     modify_test({ commit, state },{payload:{data:{id,...rest},cb}}){
         axios.request({
-            url: `http://192.168.1.58:5000/modify/test/${id}`,
+            url: `http://192.168.1.14:5000/modify/test/${id}`,
             method: 'PATCH',
-            data: rest
+            data: rest,
+            headers:{
+                token: localStorage.getItem('token')
+            }
         }).then((res)=>{
             if(cb){
                 cb(res)
@@ -53,9 +62,12 @@ const actions = {
     },
     delete_tests({ commit, state },{payload:{data,cb}}){
         axios.request({
-            url: 'http://192.168.1.58:5000/delete/tests/',
+            url: 'http://192.168.1.14:5000/delete/tests/',
             method: 'DELETE',
-            data: data
+            data: data,
+            headers:{
+                token: localStorage.getItem('token')
+            }
         }).then((res)=>{
             if(cb){
                 cb(res)

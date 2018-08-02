@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="header">
-      <BasicHeader />
+      <BasicHeader :user_data="user_data" />
     </div>
     <div class="main">
       <div class="sider">
@@ -38,90 +38,96 @@
 </template>
 
 <script>
-  import BasicHeader from './BasicHeader'
-  export default {
-    name: "BasicLayout",
-    components: {
-      BasicHeader
-    },
-    data() {
-      return {};
-    },
-    methods: {
-      handleOpen: () => {
-  
-      },
-      handleClose: () => {
-  
-      },
-    }
-  };
+import { mapGetters, mapActions } from "vuex"
+import BasicHeader from "./BasicHeader";
+export default {
+  name: "BasicLayout",
+  components: {
+    BasicHeader
+  },
+  data() {
+    return {};
+  },
+  computed: mapGetters({
+    user_data: "user",
+  }),
+  methods: {
+    handleOpen: () => {},
+    handleClose: () => {}
+  },
+  created(){
+    this.$store.dispatch({
+      type: 'get_user',
+      payload: {}
+    })
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-  .el-menu-item.is-active a {
-    color: #409EFF;
-  }
-  
-  a {
-    color: #303133;
-    text-decoration: none;
-  }
-  
-  .container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .header {
-    flex: 0;
-  }
-  
-  .main {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-  }
-  
-  .sider {
-    flex: 1;
-  }
-  
-  .main-content {
-    display: flex;
-    flex-direction: column;
-    flex: 7;
-    background: #eee;
-  }
-  
-  .content {
-    flex: 11;
-    padding: 1em;
-  }
-  
-  .main-content .title {
-    height: 50px;
-    line-height: 50px;
-    font-size: 16px;
-    font-weight: 600;
-    padding: 0 10px;
-    background: #ddd;
-    box-shadow: 1px 1px 1px #888;
-  }
-  
-  .footer {
-    flex: 1;
-    line-height: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background: #ddd;
-  }
-  
-  .copyright {
-    width: 100%;
-    text-align: center;
-  }
+.el-menu-item.is-active a {
+  color: #409eff;
+}
+
+a {
+  color: #303133;
+  text-decoration: none;
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex: 0;
+  min-height: 64px;
+  background: #002140;
+  line-height: 64px;
+  color: #fff;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+.sider {
+  flex: 1;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  flex: 7;
+  background: #eee;
+}
+
+.content {
+  flex: 11;
+  padding: 1em;
+}
+
+.main-content .title {
+  height: 50px;
+  line-height: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 0 10px;
+  background: #ddd;
+  box-shadow: 1px 1px 1px #888;
+}
+
+.footer {
+  flex: 1;
+  line-height: 100%;
+}
+
+.copyright {
+  width: 100%;
+  text-align: center;
+}
 </style>

@@ -17,7 +17,8 @@
         </el-row>
         <standard-table 
           :layout="'total, ->, prev, pager, next, jumper'" 
-          :data="students_data.list" :columns="student_columns" 
+          :data="students_data.list" 
+          :columns="student_columns" 
           :pagination="students_data.pagination" 
           @handle-click="(d)=>handleEdit(d,'student')" 
           @handle-remove="handleRemove" 
