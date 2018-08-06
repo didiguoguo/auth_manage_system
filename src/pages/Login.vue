@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="login-container">
+    <div class="login-container" @keydown="keySubmit">
       <h1 class='login-header'>
         <img src="../assets/logo.png" alt="">
         <span>鉴定站管理系统</span>
@@ -58,6 +58,11 @@ export default {
           });
         }
       });
+    },
+    keySubmit(e) {
+      if(e.keyCode === 13){
+        this.submitLogin('login_form')
+      }
     }
   }
 };

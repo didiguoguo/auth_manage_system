@@ -8,7 +8,7 @@
         </el-col>
         <el-col :md="{span:6,offset:12}">
           <el-input size='small' v-model="condition.name" placeholder="输入考试名称进行搜索">
-            <el-select v-model="condition.test_work_type" slot="prepend" width="200px" placeholder="请选择工种">
+            <el-select clearable v-model="condition.work_type" slot="prepend" width="200px" placeholder="请选择工种">
               <el-option label="操作工" value="操作工"></el-option>
               <el-option label="装调工" value="装调工"></el-option>
               <el-option label="电焊工" value="电焊工"></el-option>
@@ -141,20 +141,20 @@ const test_columns = [
     },
     actions:[
       {
-        text: "编辑",
-        method: "handle-edit"
-      },
-      {
-        text: "删除",
-        method: "handle-delete"
-      },
-      {
         text: "查看考试结果",
         method: "handle-show-detail"
       },
       {
         text: "查看审批结果",
         method: "handle-show-check"
+      },
+      {
+        text: "编辑",
+        method: "handle-edit"
+      },
+      {
+        text: "删除",
+        method: "handle-delete"
       },
     ]
   },
@@ -222,7 +222,8 @@ export default {
       type: "get_tests",
       payload: {
           current_page: 1,
-          page_size: 10
+          page_size: 10,
+          ...this.condition,
         }
       });
     },

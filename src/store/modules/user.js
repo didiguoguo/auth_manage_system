@@ -66,7 +66,6 @@ const actions = {
           token: localStorage.getItem('token')
         }
     }).then((res)=>{
-      console.log(res)
         if(res.data && res.data.code === 200){
           commit('SAVE_USER', res.data.data)
         }else{

@@ -2,7 +2,6 @@
   <div>
     <el-table :data="data" border stripe style="width: 100%">
       <el-table-column 
-        align="center" 
         v-for="column in columns" 
         :key="column.id" 
         :label="column.label" 

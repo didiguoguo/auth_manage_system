@@ -451,9 +451,6 @@ export default {
         }
       });
     },
-    test() {
-      console.log("test");
-    }
   },
   created() {
     this.activeKey = this.$route.params.activeKey || '1'

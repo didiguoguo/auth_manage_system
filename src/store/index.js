@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import student_info from './modules/student_info'
+import class_info from './modules/class_info'
 import student_res from './modules/student_res'
 import test from './modules/test'
 import user from './modules/user'
@@ -13,6 +14,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
     student_info,
+    class_info,
     student_res,
     test,
     user,
