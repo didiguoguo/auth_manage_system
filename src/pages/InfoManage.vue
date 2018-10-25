@@ -10,7 +10,7 @@
               <i class='el-icon-download'></i>批量导入学生</el-button>
           </el-col>
           <el-col :md="{span:4,offset:14}">
-            <el-input size='small' v-model="student_condition" placeholder="输入学生姓名进行搜索">
+            <el-input size='small' v-model="student_condition" @blur="()=>handleSearch('student')" placeholder="输入学生姓名进行搜索">
               <el-button slot="append" @click="()=>handleSearch('student')">搜索</el-button>
             </el-input>
           </el-col>

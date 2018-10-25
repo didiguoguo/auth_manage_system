@@ -1,4 +1,5 @@
 import axios from 'axios'
+import HOST from '../../common/const'
 
 const state = {
     tests_data: {
@@ -22,7 +23,7 @@ const getters = {
 const actions = {
     get_tests({ commit, state },{payload}){
         axios.request({
-            url:'http://192.168.1.14:5000/tests/',
+            url: HOST+'/tests/',
             method:'GET',
             params: payload,
             headers:{
@@ -34,7 +35,7 @@ const actions = {
     },
     add_test({ commit, state },{payload:{data,cb}}){
         axios.request({
-            url: 'http://192.168.1.14:5000/add/test/',
+            url:  HOST+'/add/test/',
             method: 'POST',
             data: data,
             headers:{
@@ -48,7 +49,7 @@ const actions = {
     },
     modify_test({ commit, state },{payload:{data:{id,...rest},cb}}){
         axios.request({
-            url: `http://192.168.1.14:5000/modify/test/${id}`,
+            url:  HOST+`/modify/test/${id}`,
             method: 'PATCH',
             data: rest,
             headers:{
@@ -62,7 +63,7 @@ const actions = {
     },
     delete_tests({ commit, state },{payload:{data,cb}}){
         axios.request({
-            url: 'http://192.168.1.14:5000/delete/tests/',
+            url:  HOST+'/delete/tests/',
             method: 'DELETE',
             data: data,
             headers:{

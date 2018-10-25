@@ -2,6 +2,7 @@ import { WSAEDESTADDRREQ } from 'constants';
 import axios from 'axios'
 import { Notification } from 'element-ui';
 import { parseErrorMessage } from '../../utils/request';
+import HOST from '../../common/const'
 
 const state = {
     students_data: {
@@ -35,8 +36,9 @@ const getters = {
 // actions
 const actions = {
     get_students({ commit, state },{payload}){
+        console.log(HOST)
         axios.request({
-            url:'http://192.168.1.14:5000/students/',
+            url: HOST+'/students/',
             method:'GET',
             params: payload,
             headers:{
@@ -57,7 +59,7 @@ const actions = {
     },
     add_student({ commit, state },{payload:{data,cb}}){
         axios.request({
-            url: 'http://192.168.1.14:5000/add/student/',
+            url:  HOST+'/add/student/',
             method: 'POST',
             data: data,
             headers:{
@@ -78,7 +80,7 @@ const actions = {
     },
     modify_student({ commit, state },{payload:{data:{id,...rest},cb}}){
         axios.request({
-            url: `http://192.168.1.14:5000/modify/student/${id}`,
+            url:  HOST+`/modify/student/${id}`,
             method: 'PATCH',
             data: rest,
             headers:{
@@ -99,7 +101,7 @@ const actions = {
     },
     delete_students({ commit, state },{payload:{data,cb}}){
         axios.request({
-            url: 'http://192.168.1.14:5000/delete/students/',
+            url:  HOST+'/delete/students/',
             method: 'DELETE',
             data: data,
             headers:{

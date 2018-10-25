@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="data" border stripe style="width: 100%">
+    <el-table :data="data" border stripe style="width: 100%" max-height="600">
       <el-table-column 
         v-for="column in columns" 
         :key="column.id" 

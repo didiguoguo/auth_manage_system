@@ -2,6 +2,7 @@ import axios from 'axios'
 import { parseErrorMessage } from '../../utils/request'
 import router from '../../router'
 import { Notification } from 'element-ui';
+import HOST from '../../common/const'
 
 const state = {
   user_data: {}
@@ -18,7 +19,7 @@ const getters = {
 const actions = {
   login({ commit, state },{payload}){
     axios.request({
-        url:'http://192.168.1.14:5000/user/login/',
+        url: HOST+'/user/login/',
         method:'POST',
         data: payload
     }).then((res)=>{
@@ -38,7 +39,7 @@ const actions = {
   },
   logout({ commit, state },{payload}){
     axios.request({
-        url:'http://192.168.1.14:5000/user/logout/',
+        url: HOST+'/user/logout/',
         method:'POST',
         data: payload,
         headers:{
@@ -59,7 +60,7 @@ const actions = {
   },
   get_user({ commit, state },{payload}){
     axios.request({
-        url:'http://192.168.1.14:5000/user/',
+        url: HOST+'/user/',
         method:'GET',
         params: payload,
         headers:{

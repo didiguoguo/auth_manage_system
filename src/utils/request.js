@@ -2,7 +2,7 @@ import axios from 'axios'
 import router from '../router'
 import { Notification } from 'element-ui'
 
-export const SERVER_PATH = 'http://192.168.1.14:5000'
+export const SERVER_PATH = 'http://10.10.28.14:5000'
 
 axios.defaults.baseUrl = SERVER_PATH
 

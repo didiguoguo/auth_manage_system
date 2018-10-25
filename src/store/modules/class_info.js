@@ -2,6 +2,7 @@ import { WSAEDESTADDRREQ } from 'constants';
 import axios from 'axios'
 import { Notification } from 'element-ui';
 import { parseErrorMessage } from '../../utils/request';
+import HOST from '../../common/const'
 
 const state = {
     classes_data: {
@@ -30,7 +31,7 @@ const getters = {
 const actions = {
     get_classes({ commit, state },{payload}){
         axios.request({
-            url:'http://192.168.1.14:5000/classes/',
+            url: HOST+'/classes/',
             method:'GET',
             params: payload,
             headers:{
@@ -51,7 +52,7 @@ const actions = {
     },
     get_class_by_id({ commit, state },{payload:{ id, ...rest }}){
         axios.request({
-            url:`http://192.168.1.14:5000/class/${id}`,
+            url: HOST+`/class/${id}`,
             method:'GET',
             params: rest,
             headers:{
@@ -72,7 +73,7 @@ const actions = {
     },
     add_class({ commit, state },{payload:{data,cb}}){
         axios.request({
-            url: 'http://192.168.1.14:5000/add/class/',
+            url:  HOST+'/add/class/',
             method: 'POST',
             data: data,
             headers:{
@@ -93,7 +94,7 @@ const actions = {
     },
     modify_class({ commit, state },{payload:{data:{id,...rest},cb}}){
         axios.request({
-            url: `http://192.168.1.14:5000/modify/class/${id}`,
+            url:  HOST+`/modify/class/${id}`,
             method: 'PATCH',
             data: rest,
             headers:{
@@ -114,7 +115,7 @@ const actions = {
     },
     delete_classes({ commit, state },{payload:{data,cb}}){
         axios.request({
-            url: 'http://192.168.1.14:5000/delete/classes/',
+            url:  HOST+'/delete/classes/',
             method: 'DELETE',
             data: data,
             headers:{
