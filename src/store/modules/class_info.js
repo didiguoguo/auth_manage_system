@@ -46,7 +46,8 @@ const actions = {
         }).catch((err)=>{
             Notification({
                 type:'error',
-                message: err
+                message: err,
+                title: err.code,
             })
         })
     },

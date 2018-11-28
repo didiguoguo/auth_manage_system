@@ -19,7 +19,7 @@ const getters = {
 const actions = {
   login({ commit, state },{payload}){
     axios.request({
-        url: HOST+'/user/login/',
+        url: HOST+'/user/login',
         method:'POST',
         data: payload
     }).then((res)=>{
