@@ -10,7 +10,7 @@
         <template slot-scope="scope">
           <span
             v-for="(v,index) in column.actions" 
-            v-if="column.actions && (!column.renderable || (column.renderable && column.renderable(scope.row,v)))"
+            v-if="renderable(column, scope, v)"
             class="actions"
             :key="index" 
             @click="$emit(v.method,{row:scope.row,column:scope.column,index:scope.$index})" 
@@ -59,7 +59,13 @@ export default {
   data() {
     return {};
   },
-  methods: {}
+  methods: {
+    renderable(column, scope, v){
+      if(column.actions && !column.renderable || (column.renderable && column.renderable(scope.row,v))){
+        return true
+      }
+    }
+  }
 };
 </script>
 

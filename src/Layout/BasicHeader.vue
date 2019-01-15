@@ -1,7 +1,7 @@
 <template>
   <div class="header-container">
     <div class="logo">
-      <img src="../assets/logo.png" alt="">
+      <!-- <img src="../assets/logo.png" alt=""> -->
       <span>鉴定站管理系统</span>
     </div>
     <div class="info">

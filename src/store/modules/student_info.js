@@ -36,34 +36,33 @@ const getters = {
 // actions
 const actions = {
     get_students({ commit, state },{payload}){
-        console.log(HOST)
         axios.request({
-            url: HOST+'/students/',
+            url: HOST+'/api/students/',
             method:'GET',
             params: payload,
             headers:{
-                token: localStorage.getItem('token')
+                Authorization: 'Bearer ' + localStorage.getItem('token')
             }
         }).then((res)=>{
             if(res.data&&res.data.code===200){
-                commit('SAVE_STUDENTS',res.data)
+                commit('SAVE_STUDENTS',res.data.result)
             }else{
                 parseErrorMessage(res.data)
             }
         }).catch((err)=>{
             Notification({
                 type:'error',
-                message: err
+                message: err.message
             })
         })
     },
     add_student({ commit, state },{payload:{data,cb}}){
         axios.request({
-            url:  HOST+'/add/student/',
+            url:  HOST+'/api/student/',
             method: 'POST',
             data: data,
             headers:{
-                token: localStorage.getItem('token')
+                Authorization: 'Bearer ' + localStorage.getItem('token')
             }
         }).then((res)=>{
             if(res.data && res.data.code === 200 && cb){
@@ -74,17 +73,17 @@ const actions = {
         }).catch((err)=>{
             Notification({
                 type:'error',
-                message: err
+                message: err.message
             })
         })
     },
-    modify_student({ commit, state },{payload:{data:{id,...rest},cb}}){
+    modify_student({ commit, state },{payload:{data,cb}}){
         axios.request({
-            url:  HOST+`/modify/student/${id}`,
+            url:  HOST+`/api/student/`,
             method: 'PATCH',
-            data: rest,
+            data,
             headers:{
-                token: localStorage.getItem('token')
+                Authorization: 'Bearer ' + localStorage.getItem('token')
             }
         }).then((res)=>{
             if(res.data && res.data.code === 200 && cb){
@@ -95,17 +94,17 @@ const actions = {
         }).catch((err)=>{
             Notification({
                 type:'error',
-                message: err
+                message: err.message
             })
         })
     },
     delete_students({ commit, state },{payload:{data,cb}}){
         axios.request({
-            url:  HOST+'/delete/students/',
+            url:  HOST+'/api/student/',
             method: 'DELETE',
             data: data,
             headers:{
-                token: localStorage.getItem('token')
+                Authorization: 'Bearer ' + localStorage.getItem('token')
             }
         }).then((res)=>{
             if(res.data && res.data.code === 200 && cb){
@@ -116,7 +115,7 @@ const actions = {
         }).catch((err)=>{
             Notification({
                 type:'error',
-                message: err
+                message: err.message
             })
         })
     },

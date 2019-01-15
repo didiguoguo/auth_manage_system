@@ -19,7 +19,7 @@
             <span slot="title">考试管理</span>
           </el-menu-item>
           <el-menu-item index="/manager_info" route="/manager_info">
-            <i class="el-icon-setting"></i>
+            <i class="el-icon-info"></i>
             <span slot="title">管理员信息</span>
           </el-menu-item>
         </el-menu>
@@ -55,12 +55,6 @@ export default {
     handleOpen: () => {},
     handleClose: () => {}
   },
-  created(){
-    this.$store.dispatch({
-      type: 'get_user',
-      payload: {}
-    })
-  }
 };
 </script>
 

@@ -23,6 +23,7 @@
         :columns="test_columns" 
         :pagination="tests_data.pagination" 
         @handle-remove="handleRemove" 
+        @handle-edit="handleEdit"
         @current-change="handlePageChange" 
         @handle-show-more="handleShowDetail"
       />
@@ -154,7 +155,7 @@ const test_columns = [
       },
       {
         text: "删除",
-        method: "handle-delete"
+        method: "handle-remove"
       },
     ]
   },
@@ -239,6 +240,10 @@ export default {
       this.$router.push({
         path: `test_detail/${row.id}`
       });
+    },
+    handleEdit({ row, column, index }){
+      this.test_form = { ...row }
+      this.handleShowModal('test_modal_visible')
     },
     handleShowModal(key) {
       this[key] = true;

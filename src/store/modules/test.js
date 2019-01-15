@@ -23,23 +23,23 @@ const getters = {
 const actions = {
     get_tests({ commit, state },{payload}){
         axios.request({
-            url: HOST+'/tests/',
+            url: HOST+'/api/tests/',
             method:'GET',
             params: payload,
             headers:{
-                token: localStorage.getItem('token')
+                Authorization: 'Bearer ' + localStorage.getItem('token')
             }
         }).then((res)=>{
-            commit('SAVE_TESTS',res.data)
+            commit('SAVE_TESTS',res.data.result)
         })
     },
     add_test({ commit, state },{payload:{data,cb}}){
         axios.request({
-            url:  HOST+'/add/test/',
+            url:  HOST+'/api/test/',
             method: 'POST',
             data: data,
             headers:{
-                token: localStorage.getItem('token')
+                Authorization: 'Bearer ' + localStorage.getItem('token')
             }
         }).then((res)=>{
             if(cb){
@@ -47,13 +47,13 @@ const actions = {
             }
         })
     },
-    modify_test({ commit, state },{payload:{data:{id,...rest},cb}}){
+    modify_test({ commit, state },{payload:{data,cb}}){
         axios.request({
-            url:  HOST+`/modify/test/${id}`,
+            url:  HOST+`/api/test/${id}`,
             method: 'PATCH',
-            data: rest,
+            data,
             headers:{
-                token: localStorage.getItem('token')
+                Authorization: 'Bearer ' + localStorage.getItem('token')
             }
         }).then((res)=>{
             if(cb){
@@ -63,11 +63,11 @@ const actions = {
     },
     delete_tests({ commit, state },{payload:{data,cb}}){
         axios.request({
-            url:  HOST+'/delete/tests/',
+            url:  HOST+'/api/tests/',
             method: 'DELETE',
             data: data,
             headers:{
-                token: localStorage.getItem('token')
+                Authorization: 'Bearer ' + localStorage.getItem('token')
             }
         }).then((res)=>{
             if(cb){

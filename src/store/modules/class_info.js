@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Notification } from 'element-ui';
 import { parseErrorMessage } from '../../utils/request';
 import HOST from '../../common/const'
+import { stringify } from 'querystring';
 
 const state = {
     classes_data: {
@@ -31,33 +32,32 @@ const getters = {
 const actions = {
     get_classes({ commit, state },{payload}){
         axios.request({
-            url: HOST+'/classes/',
+            url: HOST+'/api/classes/',
             method:'GET',
             params: payload,
             headers:{
-                token: localStorage.getItem('token')
+                Authorization: 'Bearer ' + localStorage.getItem('token')
             }
         }).then((res)=>{
             if(res.data&&res.data.code===200){
-                commit('SAVE_CLASSES',res.data)
+                commit('SAVE_CLASSES',res.data.result)
             }else{
                 parseErrorMessage(res.data)
             }
         }).catch((err)=>{
             Notification({
                 type:'error',
-                message: err,
+                message: err.message,
                 title: err.code,
             })
         })
     },
-    get_class_by_id({ commit, state },{payload:{ id, ...rest }}){
+    get_class_by_id({ commit, state },{payload: {id, ...rest}}){
         axios.request({
-            url: HOST+`/class/${id}`,
+            url: HOST+`/api/class/${id}`,
             method:'GET',
-            params: rest,
             headers:{
-                token: localStorage.getItem('token')
+                Authorization:  'Bearer ' + localStorage.getItem('token')
             }
         }).then((res)=>{
             if(res.data&&res.data.code===200){
@@ -68,17 +68,17 @@ const actions = {
         }).catch((err)=>{
             Notification({
                 type:'error',
-                message: err
+                message: err.message
             })
         })
     },
-    add_class({ commit, state },{payload:{data,cb}}){
+    add_class({ commit, state },{payload: {data, cb} }){
         axios.request({
-            url:  HOST+'/add/class/',
+            url:  HOST+'/api/class/',
             method: 'POST',
             data: data,
             headers:{
-                token: localStorage.getItem('token')
+                Authorization: 'Bearer ' + localStorage.getItem('token')
             }
         }).then((res)=>{
             if(res.data && res.data.code===200 && cb){
@@ -89,17 +89,17 @@ const actions = {
         }).catch((err)=>{
             Notification({
                 type:'error',
-                message: err
+                message: err.message
             })
         })
     },
-    modify_class({ commit, state },{payload:{data:{id,...rest},cb}}){
+    modify_class({ commit, state },{payload:{data, cb}}){
         axios.request({
-            url:  HOST+`/modify/class/${id}`,
+            url:  HOST+`/api/class`,
             method: 'PATCH',
-            data: rest,
+            data,
             headers:{
-                token: localStorage.getItem('token')
+                Authorization: 'Bearer ' + localStorage.getItem('token')
             }
         }).then((res)=>{
             if(res.data&&res.data.code===200 && cb){
@@ -110,20 +110,20 @@ const actions = {
         }).catch((err)=>{
             Notification({
                 type:'error',
-                message: err
+                message: err.message
             })
         })
     },
-    delete_classes({ commit, state },{payload:{data,cb}}){
+    delete_classes({ commit, state },{payload: {data, cb} }){
         axios.request({
-            url:  HOST+'/delete/classes/',
+            url:  HOST+'/api/class/',
             method: 'DELETE',
-            data: data,
+            data,
             headers:{
-                token: localStorage.getItem('token')
+                Authorization: 'Bearer ' + localStorage.getItem('token')
             }
         }).then((res)=>{
-            if(res.data&&res.data.code===200&&cb){
+            if(res.data && res.data.code===200 && cb){
                 cb(res)
             }else{
                 parseErrorMessage(res.data)
@@ -131,7 +131,7 @@ const actions = {
         }).catch((err)=>{
             Notification({
                 type:'error',
-                message: err
+                message: err.message
             })
         })
     },

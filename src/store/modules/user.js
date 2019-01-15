@@ -19,7 +19,7 @@ const getters = {
 const actions = {
   login({ commit, state },{payload}){
     axios.request({
-        url: HOST+'/user/login',
+        url: HOST+'/auth/login',
         method:'POST',
         data: payload
     }).then((res)=>{
@@ -43,7 +43,7 @@ const actions = {
         method:'POST',
         data: payload,
         headers:{
-          token: localStorage.getItem('token')
+          Authorization: 'Bearerer ' + localStorage.getItem('token')
         }
     }).then((res)=>{
       localStorage.removeItem('token')
@@ -64,7 +64,7 @@ const actions = {
         method:'GET',
         params: payload,
         headers:{
-          token: localStorage.getItem('token')
+          Authorization: 'Bearerer ' + localStorage.getItem('token')
         }
     }).then((res)=>{
         if(res.data && res.data.code === 200){
