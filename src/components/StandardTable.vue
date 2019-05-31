@@ -64,6 +64,7 @@ export default {
       if(column.actions && !column.renderable || (column.renderable && column.renderable(scope.row,v))){
         return true
       }
+      return false
     }
   }
 };
