@@ -3,7 +3,7 @@
 
 const Sequelize = require('sequelize');
 
-const Ams =  new Sequelize('mysql://root:password@10.10.28.14/ams', {
+const Ams =  new Sequelize('mysql://root:yandi@39.98.233.207:3306/ams', {
     define: {
         timestamps: false, // 取消Sequelzie自动给数据表加入时间戳（createdAt以及updatedAt）
     },

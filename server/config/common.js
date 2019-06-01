@@ -22,5 +22,5 @@ module.exports = {
         message: 'succ'
     },
     secretKey: 'xixixi',
-    port: 9999
+    port: 8080
 }
