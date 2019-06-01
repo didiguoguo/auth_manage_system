@@ -10,7 +10,7 @@ module.exports = {
         },
         404: {
             code: 404,
-            message: 'not found'
+            message: 'not found 1'
         },
         500: {
             code: 500,
