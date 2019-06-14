@@ -2,7 +2,7 @@ import axios from 'axios'
 import { parseErrorMessage } from '../../utils/request'
 import router from '../../router'
 import { Notification } from 'element-ui';
-import HOST from '../../common/const'
+import { LOGIN_HOST } from '../../common/const'
 
 const state = {
   user_data: {}
@@ -19,7 +19,7 @@ const getters = {
 const actions = {
   login({ commit, state },{payload}){
     axios.request({
-        url: HOST+'/auth/login',
+        url: LOGIN_HOST+'/auth/login',
         method:'POST',
         data: payload
     }).then((res)=>{
@@ -39,7 +39,7 @@ const actions = {
   },
   logout({ commit, state },{payload}){
     axios.request({
-        url: HOST+'/user/logout/',
+        url: LOGIN_HOST+'/user/logout/',
         method:'POST',
         data: payload,
         headers:{
@@ -60,7 +60,7 @@ const actions = {
   },
   get_user({ commit, state },{payload}){
     axios.request({
-        url: HOST+'/user/',
+        url: LOGIN_HOST+'/user/',
         method:'GET',
         params: payload,
         headers:{
