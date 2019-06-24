@@ -1,0 +1,2 @@
+Mon, 24 Jun 2019 07:26:11 GMT koa deprecated Support for generators will be removed in v3. See the documentation for examples of how to convert old middleware https://github.com/koajs/koa/blob/master/docs/migration.md at app.js:62:5
+Koa service is listening on port 8080
