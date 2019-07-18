@@ -17,7 +17,7 @@ const getUserInfoById = async (ctx) => {
 }
 
 const getCurrentUser = async (ctx) => {
-    jwt.verify(ctx.headers.Authorition, secretKey, res => {
+    jwt.verify(ctx.headers.Authorition, secretKey, async function(res) {
         console.log(res);
         if(res){
             const { id } = res;
@@ -34,7 +34,7 @@ const getCurrentUser = async (ctx) => {
             ctx.code = 200;
             ctx.body = errorResponse['401']
         }
-    });
+    }.bind(this));
 }
 
 const AuthPostUser = async (ctx) => {
