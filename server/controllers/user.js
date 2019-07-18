@@ -17,19 +17,17 @@ const getUserInfoById = async (ctx) => {
 }
 
 const getCurrentUser = async (ctx) => {
-    
-        let obj = jwt.verify(ctx.headers.Authorition, secretKey);
-        let { id } = obj;
-	console.log(obj);
-        const result = await user.getUserById(id);
-        if(result){
-            ctx.body = {
-                ...succResponse,
-                result
-            };
-        }
+    let obj = jwt.verify(ctx.headers.Authorition, secretKey);
+    let { id } = obj;
+    const result = await user.getUserById(id);
+    if(result){
+        ctx.body = {
+            ...succResponse,
+            result
+        };
+    }else{
         ctx.body = errorResponse['400'];
-    
+    }
 }
 
 const AuthPostUser = async (ctx) => {
