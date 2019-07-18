@@ -61,5 +61,6 @@ const AuthPostUser = async (ctx) => {
 
 module.exports = {
     getUserInfoById,
+    getCurrentUser,
     AuthPostUser
 }
