@@ -25,7 +25,7 @@ app.use(async (ctx, next) => {  //  如果JWT验证失败，返回验证失败�
         await next();
     } catch (err) {
         if (401 == err.status) {
-            ctx.status = 401;
+            ctx.status = 200;
             ctx.body = {
                 ...errorResponse['401']
             };

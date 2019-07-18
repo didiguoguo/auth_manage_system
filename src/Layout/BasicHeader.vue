@@ -28,10 +28,8 @@
     },
     methods:{
       logout(){
-        this.$store.dispatch({
-          type:'logout',
-          payload:{}
-        })
+        localStorage.clear();
+        this.$router.push('/login');
       }
     }
   };
