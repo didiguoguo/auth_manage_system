@@ -17,17 +17,22 @@ const getUserInfoById = async (ctx) => {
 }
 
 const getCurrentUser = async (ctx) => {
-    const res = jwt.decode(ctx.headers.Authorition);
+    const res = jwt.verify(ctx.headers.Authorition, secretKey, function(){});
     console.log(res)
-    const { id } = res;
-    const result = await user.getUserById(id);
-    if(result){
-        ctx.body = {
-            ...succResponse,
-            result
-        };
+    if(res){
+        const { id } = res;
+        const result = await user.getUserById(id);
+        if(result){
+            ctx.body = {
+                ...succResponse,
+                result
+            };
+        }else{
+            ctx.body = errorResponse['400'];
+        }
     }else{
-        ctx.body = errorResponse['400'];
+        ctx.code = 200;
+        ctx.body = errorResponse['401']
     }
 }
 
