@@ -45,6 +45,11 @@ export default {
   components: {
     BasicHeader
   },
+  mounted(){
+    this.$store.dispatch({
+      type: 'get_current_user',
+    })
+  },
   data() {
     return {};
   },
@@ -96,13 +101,16 @@ a {
 .main-content {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex-grow: 1;
   background: #eee;
+  overflow: hidden;
 }
 
 .content {
-  flex: 11;
+  flex-grow: 1;
   padding: 1em;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .main-content .title {
@@ -116,8 +124,8 @@ a {
 }
 
 .footer {
-  flex: 1;
-  line-height: 100%;
+  height: 40px;
+  line-height: 40px;
 }
 
 .copyright {

@@ -16,6 +16,21 @@ const getUserInfoById = async (ctx) => {
     }
 }
 
+const getCurrentUser = async (ctx) => {
+    const res = jwt.decode(ctx.header.Authorition);
+    console.log(res)
+    const { id } = res;
+    const result = await user.getUserById(id);
+    if(result){
+        ctx.body = {
+            ...succResponse,
+            result
+        };
+    }else{
+        ctx.body = errorResponse['400'];
+    }
+}
+
 const AuthPostUser = async (ctx) => {
     const data = ctx.request.body;
     const userInfo  = await user.getUserByName(data.name);

@@ -24,7 +24,6 @@ const actions = {
         data: payload
     }).then((res)=>{
         if(res.data && res.data.code === 200){
-          commit('SAVE_USER', payload)
           localStorage.setItem('token',res.data.token)
           router.push('/')
         }else{
@@ -58,9 +57,30 @@ const actions = {
         })
     })
   },
-  get_user({ commit, state },{payload}){
+  // get_user_by_id({ commit, state },{payload}){
+  //   axios.request({
+  //       url: LOGIN_HOST+'/user/' + payload.id,
+  //       method:'GET',
+  //       params: payload,
+  //       headers:{
+  //         Authorization: 'Bearerer ' + localStorage.getItem('token')
+  //       }
+  //   }).then((res)=>{
+  //       if(res.data && res.data.code === 200){
+  //         commit('SAVE_USER', res.data.data)
+  //       }else{
+  //           parseErrorMessage(res.data)
+  //       }
+  //   }).catch((err)=>{
+  //       Notification({
+  //           type:'error',
+  //           message: err.message
+  //       })
+  //   })
+  // },
+  get_current_user({ commit, state },{payload}){
     axios.request({
-        url: LOGIN_HOST+'/user/',
+        url: LOGIN_HOST+'/currentUser',
         method:'GET',
         params: payload,
         headers:{
