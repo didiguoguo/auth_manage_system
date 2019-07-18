@@ -17,7 +17,7 @@ const getUserInfoById = async (ctx) => {
 }
 
 const getCurrentUser = async (ctx) => {
-    const res = jwt.decode(ctx.header.Authorition);
+    const res = jwt.decode(ctx.headers.Authorition);
     console.log(res)
     const { id } = res;
     const result = await user.getUserById(id);
