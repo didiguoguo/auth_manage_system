@@ -23,7 +23,7 @@ const getCurrentUser = async (ctx) => {
     if(result){
         ctx.body = {
             ...succResponse,
-            result
+            data: result
         };
     }else{
         ctx.body = errorResponse['400'];
