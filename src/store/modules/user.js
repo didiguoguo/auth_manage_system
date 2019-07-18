@@ -80,7 +80,7 @@ const actions = {
   // },
   get_current_user({ commit, state },{payload}){
     axios.request({
-        url: LOGIN_HOST+'/currentUser',
+        url: LOGIN_HOST+'/currentUser/',
         method:'GET',
         params: payload,
         headers:{
