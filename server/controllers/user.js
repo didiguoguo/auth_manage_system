@@ -17,7 +17,7 @@ const getUserInfoById = async (ctx) => {
 }
 
 const getCurrentUser = async (ctx) => {
-    console.log(ctx.headers.Authorization)
+    console.log(ctx.request.headers)
     // let obj = jwt.verify(ctx.headers.Authorization, secretKey);
     let obj = {};
     let { id = 0 } = obj;
