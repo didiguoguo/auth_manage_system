@@ -51,7 +51,12 @@ app.use(cors({
 }))
 
 app.on('error', function(err, ctx){
-    console.log('server error', err)
+    console.log('server error', err);
+    ctx.status = 500;
+    ctx.body = {
+        ...errorResponse[500],
+        message: err
+    }
 })
 
 router.use('/auth', auth.routes())
