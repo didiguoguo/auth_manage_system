@@ -18,7 +18,7 @@ const getUserInfoById = async (ctx) => {
 
 const getCurrentUser = async (ctx) => {
     console.log(ctx.request.headers.authorization)
-    let obj = jwt.verify(ctx.request.headers.authorization, secretKey);
+    let obj = jwt.verify(ctx.request.headers.authorization.slice(9), secretKey);
     let { id = 0 } = obj;
     const result = await user.getUserById(id);
     if(result){
