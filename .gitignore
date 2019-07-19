@@ -18,3 +18,5 @@ __pycache__/*
 
 
 *.swp
+nohup.out
+log/*
